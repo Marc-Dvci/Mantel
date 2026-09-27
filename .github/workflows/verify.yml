@@ -1,0 +1,40 @@
+name: verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  typescript:
+    runs-on: ubuntu-latest
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports: ["8001:8000"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:web
+      - run: npx playwright install --with-deps chromium
+      - run: pnpm verify
+        env:
+          MANTEL_DYNAMO_ENDPOINT: http://localhost:8001
+      - run: pnpm cdk:synth
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - run: python3 tools/android/fetch_model.py
+      - working-directory: android
+        run: chmod +x gradlew && ./gradlew --no-daemon assembleDebug testDebugUnitTest
