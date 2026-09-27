@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="caremode_service_label">Care mode: return to the care app</string>
+    <string name="caremode_service_description">Brings the care app back to the screen after the TV has been left on the home screen or another app with nobody using the remote.</string>
+</resources>

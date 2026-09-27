@@ -12,6 +12,6 @@ android/**/build/
 android/local.properties
 android/.idea/
 android/app/src/main/assets/tv/
-android/app/src/main/assets/model/
+android/app/src/main/assets/model-en-us/
 *.apk
 *.iml
