@@ -43,10 +43,10 @@ describe("Today screen", () => {
 });
 
 describe("messages", () => {
-  it("plays the morning message on first presence after 7, once, and never to an empty room", () => {
+  it("plays the morning message on first presence after 7:30, once, and never to an empty room", () => {
     const { h } = household("07:42");
     expect(nextMessage(h, at("07:42"), false)).toBeUndefined();
-    expect(nextMessage(h, at("06:55"), true)).toBeUndefined();
+    expect(nextMessage(h, at("07:20"), true)).toBeUndefined();
     const m = nextMessage(h, at("07:42"), true);
     expect(m?.id).toBe("msg-morning");
     m!.playedAt = at("07:42").toISOString();

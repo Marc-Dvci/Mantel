@@ -5,6 +5,13 @@
  * nothing that flashes, and every change a slow fade.
  */
 
+/* Digits come from the platform's sans-serif, whose zero has no slash; every letter stays Atkinson Hyperlegible. */
+@font-face {
+  font-family: "Plain Digits";
+  src: local("Roboto"), local("Arial"), local("Helvetica Neue"), local("Helvetica");
+  unicode-range: U+0030-0039;
+}
+
 @font-face {
   font-family: "Atkinson Hyperlegible";
   src: url("./fonts/atkinson-400.woff2") format("woff2");
@@ -45,7 +52,7 @@ body,
 }
 
 body {
-  font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  font-family: "Plain Digits", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   cursor: none;

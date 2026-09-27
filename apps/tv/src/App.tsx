@@ -4,6 +4,7 @@ import {
   UNKNOWN_RESPONSE,
   addressed,
   computeToday,
+  isQuestion,
   memberById,
   nextMessage,
   resolveAnswer,
@@ -248,7 +249,7 @@ function Screen({ settings }: { settings: NonNullable<ReturnType<typeof resolveS
   if (overlay?.kind === "door") body = <DoorScreen card={overlay.card} h={h} photo={photo} />;
   else if (overlay?.kind === "message") body = <MessageScreen message={overlay.message} h={h} photo={photo} />;
   else if (mode === "night") body = <NightScreen board={board} present={present} />;
-  else if (overlay?.kind === "answer") body = <AnswerScreen answer={overlay.answer} heard={overlay.heard} photo={photo} />;
+  else if (overlay?.kind === "answer") body = <AnswerScreen answer={overlay.answer} heard={asWritten(overlay.heard, h)} photo={photo} />;
   else if (overlay?.kind === "story") body = <StoryScreen moment={overlay.moment} photo={photo} h={h} />;
   else if (resting) body = <RestScreen board={board} />;
   else body = <TodayScreen board={board} h={h} moment={moment} photo={photo} highlight={overlay?.kind === "unknown"} />;
@@ -263,6 +264,15 @@ function Screen({ settings }: { settings: NonNullable<ReturnType<typeof resolveS
       {DEV && <DevPanel present={present} />}
     </div>
   );
+}
+
+/** What was heard, as a person would write it: a capital first letter, capitals on the household's names, a question mark. */
+function asWritten(heard: string, h: Household): string {
+  const names = [...h.members.flatMap((m) => [m.name, ...(m.aliases ?? [])]), ...h.person.others.flatMap((o) => [o.name, ...(o.aliases ?? [])])];
+  let s = heard.trim();
+  for (const n of names) s = s.replace(new RegExp(`\\b${n.toLowerCase()}\\b`, "g"), n.charAt(0).toUpperCase() + n.slice(1));
+  s = s.replace(/^./, (c) => c.toUpperCase());
+  return /[?.!]$/.test(s) || !isQuestion(s) ? s : `${s}?`;
 }
 
 /** A sky band that follows the real time of day. */
@@ -339,7 +349,7 @@ function AnswerScreen({ answer, heard, photo }: { answer: Answer; heard: string;
   const src = photo(answer.photo);
   return (
     <div className="answer">
-      <div className="heard">“{heard.replace(/^./, (c) => c.toUpperCase())}”</div>
+      <div className="heard">“{heard}”</div>
       <div className="answer-body">
         {src && <img className="answer-photo" src={src} alt="" />}
         <div className="answer-text">{answer.text}</div>

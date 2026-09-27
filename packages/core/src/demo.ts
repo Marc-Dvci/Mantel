@@ -161,7 +161,7 @@ export function demoHousehold(now: Date): Household {
         media: "audio-msg-morning-sarah",
         mediaKind: "audio",
         text: "Good morning, Mum. It's a lovely day. I'll see you at four o'clock.",
-        schedule: { kind: "first-seen-after", date: today, time: "07:00" },
+        schedule: { kind: "first-seen-after", date: today, time: "07:30" },
         approvedBy: "sarah",
         approvedAt: at(today, "06:40"),
       },
