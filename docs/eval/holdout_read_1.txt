@@ -1,0 +1,13 @@
+set       items  answered right  wrong topic  missed  false answers  wrong answers
+dev          99     65/67 97.0%            0       2           0/32              0
+holdout      92     53/57 93.0%            0       4           2/35              2
+  [dev] "what am i supposed to do now" expected builtin-next got null (no-match 0)
+  [dev] "i want robert" expected topic-robert got null (not-a-question 0)
+  [holdout] "is it nighttime" expected builtin-time got null (no-match 0)
+  [holdout] "where has the dog gone" expected topic-biscuit got null (no-match 0)
+  [holdout] "is biscuit hungry" expected topic-biscuit got null (no-match 0)
+  [holdout] "do i owe any money" expected topic-bills got null (no-match 0.408)
+  [holdout] "where did i leave my glasses" expected null got builtin-where ( 0.515)
+  [holdout] "what's for lunch" expected null got builtin-meal ( 0.9)
+
+2 wrong answer(s). An unknown reply is safe; a wrong one is not.
