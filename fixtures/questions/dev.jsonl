@@ -1,0 +1,99 @@
+{"text": "what day is it today", "expect": "builtin-day"}
+{"text": "whats the date", "expect": "builtin-day"}
+{"text": "is today sunday", "expect": "builtin-day"}
+{"text": "what day of the week is it", "expect": "builtin-day"}
+{"text": "remind me what day it is", "expect": "builtin-day"}
+{"text": "what's today's date", "expect": "builtin-day"}
+{"text": "is it monday", "expect": "builtin-day"}
+{"text": "what month are we in", "expect": "builtin-day"}
+{"text": "what time is it now", "expect": "builtin-time"}
+{"text": "whats the time", "expect": "builtin-time"}
+{"text": "is it morning or afternoon", "expect": "builtin-time"}
+{"text": "is it late", "expect": "builtin-time"}
+{"text": "what time is it dear", "expect": "builtin-time"}
+{"text": "what are we doing today", "expect": "builtin-next"}
+{"text": "what happens next", "expect": "builtin-next"}
+{"text": "what's the plan for today", "expect": "builtin-next"}
+{"text": "what am i supposed to do now", "expect": "builtin-next"}
+{"text": "what's on today", "expect": "builtin-next"}
+{"text": "is anybody coming to see me", "expect": "builtin-visitors"}
+{"text": "who's coming today", "expect": "builtin-visitors"}
+{"text": "are we expecting visitors", "expect": "builtin-visitors"}
+{"text": "is someone coming over", "expect": "builtin-visitors"}
+{"text": "have i had my lunch", "expect": "builtin-meal"}
+{"text": "when's dinner", "expect": "builtin-meal"}
+{"text": "did i eat breakfast", "expect": "builtin-meal"}
+{"text": "when do we have lunch", "expect": "builtin-meal"}
+{"text": "have i eaten today", "expect": "builtin-meal"}
+{"text": "did i take my tablets", "expect": "builtin-pills"}
+{"text": "have i had my medicine", "expect": "builtin-pills"}
+{"text": "did i take my pills this morning", "expect": "builtin-pills"}
+{"text": "where am i", "expect": "builtin-where"}
+{"text": "i want to go home", "expect": "builtin-where"}
+{"text": "is this my house", "expect": "builtin-where"}
+{"text": "take me home please", "expect": "builtin-where"}
+{"text": "i need to go home now", "expect": "builtin-where"}
+{"text": "when is sarah coming", "expect": "visit-sarah"}
+{"text": "is sarah coming today", "expect": "visit-sarah"}
+{"text": "where's sarah", "expect": "visit-sarah"}
+{"text": "when will i see my daughter", "expect": "visit-sarah"}
+{"text": "is sally coming", "expect": "visit-sarah"}
+{"text": "sarah coming today", "expect": "visit-sarah"}
+{"text": "when does sarah get here", "expect": "visit-sarah"}
+{"text": "i want to see sarah", "expect": "visit-sarah"}
+{"text": "has sarah called", "expect": "visit-sarah"}
+{"text": "when is tom coming", "expect": "visit-tom"}
+{"text": "is my grandson coming", "expect": "visit-tom"}
+{"text": "when will tommy visit", "expect": "visit-tom"}
+{"text": "is tom coming today", "expect": "visit-tom"}
+{"text": "where's robert", "expect": "topic-robert"}
+{"text": "when is robert coming home", "expect": "topic-robert"}
+{"text": "where is my husband", "expect": "topic-robert"}
+{"text": "is bob at work", "expect": "topic-robert"}
+{"text": "has robert rung", "expect": "topic-robert"}
+{"text": "i want robert", "expect": "topic-robert"}
+{"text": "where did robert go", "expect": "topic-robert"}
+{"text": "has the dog been fed", "expect": "topic-biscuit"}
+{"text": "where's biscuit", "expect": "topic-biscuit"}
+{"text": "did i feed biscuit", "expect": "topic-biscuit"}
+{"text": "where is the dog", "expect": "topic-biscuit"}
+{"text": "where's my purse", "expect": "topic-purse"}
+{"text": "i can't find my handbag", "expect": "topic-purse"}
+{"text": "where did i put my purse", "expect": "topic-purse"}
+{"text": "someone has taken my purse", "expect": "topic-purse"}
+{"text": "have i paid the bills", "expect": "topic-bills"}
+{"text": "do i need to pay the electric bill", "expect": "topic-bills"}
+{"text": "who pays the bills", "expect": "topic-bills"}
+{"text": "is the gas bill paid", "expect": "topic-bills"}
+{"text": "is it going to rain", "expect": null}
+{"text": "where are my glasses", "expect": null}
+{"text": "did the paper come", "expect": null}
+{"text": "what's for dessert", "expect": null}
+{"text": "where is my mother", "expect": null}
+{"text": "is the kettle on", "expect": null}
+{"text": "what's on the telly", "expect": null}
+{"text": "who won the game", "expect": null}
+{"text": "where is he", "expect": null}
+{"text": "when is she coming", "expect": null}
+{"text": "where is dorothy", "expect": null}
+{"text": "how old am i", "expect": null}
+{"text": "is the car in the garage", "expect": null}
+{"text": "why is it so cold", "expect": null}
+{"text": "the weather is lovely today", "expect": null}
+{"text": "and then we went to the shops", "expect": null}
+{"text": "that's a nice dress", "expect": null}
+{"text": "yes", "expect": null}
+{"text": "no thank you", "expect": null}
+{"text": "oh look at that", "expect": null}
+{"text": "i like this song", "expect": null}
+{"text": "we'll be right back after these messages", "expect": null}
+{"text": "the president said on tuesday", "expect": null}
+{"text": "stay tuned for the news at six", "expect": null}
+{"text": "thank you dear", "expect": null}
+{"text": "sarah is a good girl", "expect": null}
+{"text": "robert loved gardening", "expect": null}
+{"text": "the dog is sleeping", "expect": null}
+{"text": "my purse is heavy", "expect": null}
+{"text": "lunch was lovely", "expect": null}
+{"text": "i'm tired", "expect": null}
+{"text": "goodnight", "expect": null}

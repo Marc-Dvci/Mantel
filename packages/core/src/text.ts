@@ -23,10 +23,18 @@ const CONTRACTIONS: [RegExp, string][] = [
   [/'s\b/g, ""],
 ];
 
+/** Contractions as a speech recogniser writes them, without the apostrophe. */
+const BARE: Record<string, string> = {
+  whats: "what is", wheres: "where is", whens: "when is", whos: "who is", hows: "how is", thats: "that is",
+  dont: "do not", didnt: "did not", doesnt: "does not", cant: "can not", wont: "will not", isnt: "is not",
+  havent: "have not", hasnt: "has not", im: "i am", ive: "i have", youre: "you are", theyre: "they are",
+};
+
 /** Lowercase, straight quotes, contractions expanded, punctuation removed. */
 export function normalize(text: string): string {
   let s = text.toLowerCase().replace(/[‘’ʼ`]/g, "'");
   for (const [re, rep] of CONTRACTIONS) s = s.replace(re, rep);
+  s = s.replace(/\b[a-z]+\b/g, (w) => BARE[w] ?? w);
   s = s.replace(/o'clock/g, "oclock");
   s = s.replace(/[^a-z0-9\s]/g, " ");
   return s.replace(/\s+/g, " ").trim();

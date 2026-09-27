@@ -48,6 +48,8 @@ const QUESTION_STARTERS = new Set([
 
 const WH = new Set(["what", "when", "where", "who", "why", "how", "which"]);
 
+const PRONOUNS = new Set(["he", "she", "him", "her", "his", "hers"]);
+
 const STOP = new Set([
   "a", "an", "the", "is", "are", "am", "was", "were", "be", "been", "it", "to", "of", "in", "on", "at",
   "i", "me", "my", "you", "your", "we", "us", "our", "he", "she", "him", "her", "his", "they", "them",
@@ -75,6 +77,12 @@ const CANON: Record<string, string> = {
   husband: "husband", wife: "wife", hubby: "husband",
   leave: "go", leaving: "go", going: "go", went: "go",
   seeing: "see", saw: "see", seen: "see",
+  someone: "someone", somebody: "someone", anyone: "someone", anybody: "someone",
+  rung: "call", rang: "call", ring: "call", phoned: "call", phone: "call", called: "call", calling: "call", calls: "call",
+  handbag: "purse", pocketbook: "purse",
+  monday: "weekday", tuesday: "weekday", wednesday: "weekday", thursday: "weekday", friday: "weekday", saturday: "weekday", sunday: "weekday",
+  january: "month", february: "month", march: "month", april: "month", june: "month", july: "month",
+  august: "month", september: "month", october: "month", november: "month", december: "month",
   happening: "happen", happens: "happen", next: "next", later: "next", plan: "plan", plans: "plan",
 };
 
@@ -156,8 +164,21 @@ export function addressed(text: string, mode: Household["settings"]["listening"]
   return true;
 }
 
+/** Two-word phrases that mean one thing: "get here" is "come". */
+const PHRASES: [RegExp, string][] = [
+  [/\bget here\b/g, "come"],
+  [/\bgets here\b/g, "come"],
+  [/\bcome over\b/g, "come"],
+  [/\bcoming over\b/g, "come"],
+  [/\bcome round\b/g, "come"],
+  [/\bcoming round\b/g, "come"],
+  [/\bpop in\b/g, "come"],
+];
+
 function contentTokens(text: string): string[] {
-  return tokens(text).filter((t) => !STOP.has(t) && !WH.has(t)).map(stem);
+  let n = normalize(text);
+  for (const [re, rep] of PHRASES) n = n.replace(re, rep);
+  return n.split(" ").filter((t) => t && !STOP.has(t) && !WH.has(t)).map(stem);
 }
 
 /** Words dropped before comparing a whole sentence with a whole example question. */
@@ -187,6 +208,15 @@ interface Prepared {
 
 /** A statement ("I want to see Robert") must share this many content words with an example. */
 const STATEMENT_MIN_SHARED = 2;
+/** Word overlap never scores as high as a whole-sentence match. */
+const OVERLAP_CAP = 0.9;
+/**
+ * A question that names a person, and matches nothing on its words, is
+ * answered by that person's redirect or comfort topic when there is exactly
+ * one. Those topics are the family's answer to any question about the person
+ * ("Robert loved this house..."). A "tell" topic always needs matching words.
+ */
+const PERSON_CATCH_ALL_SCORE = 0.6;
 
 export class Matcher {
   private readonly idx: EntityIndex;
@@ -257,7 +287,7 @@ export class Matcher {
     if (statement && sharedCount < STATEMENT_MIN_SHARED) return 0;
     const nu = Math.sqrt(u.reduce((s, t) => s + this.weight(t) ** 2, 0));
     const np = Math.sqrt(p.toks.reduce((s, t) => s + this.weight(t) ** 2, 0));
-    let score = shared / (nu * np);
+    let score = Math.min(OVERLAP_CAP, shared / (nu * np));
     if (uWh && p.wh && uWh !== p.wh) score *= 0.5;
     return score;
   }
@@ -270,6 +300,8 @@ export class Matcher {
     const u = [...new Set(this.withoutNames(contentTokens(text)))];
     const uWh = raw.find((w) => WH.has(w));
     const uKey = this.phraseKey(text);
+    // "When is she coming?" is about a person Mantel cannot identify.
+    if (utterEntities.size === 0 && raw.some((w) => PRONOUNS.has(w))) return { kind: "unknown", reason: "unknown-person" };
 
     const candidates = this.prepared.filter((p) => {
       if (!question && !p.topic.statements) return false;
@@ -284,6 +316,12 @@ export class Matcher {
     const scored = candidates
       .map((p) => ({ p, score: Math.max(0, ...p.phrasings.map((ph) => this.similarity(u, uKey, uWh, ph, !question))) }))
       .sort((a, b) => b.score - a.score);
+    if (question && utterEntities.size > 0 && scored[0]!.score < MATCH_THRESHOLD) {
+      const catchAll = candidates.filter((p) => p.topic.policy !== "tell" && !p.topic.builtin);
+      if (catchAll.length === 1) {
+        return { kind: "answer", topic: catchAll[0]!.topic, score: PERSON_CATCH_ALL_SCORE, runnerUp: scored[0]!.score };
+      }
+    }
     const best = scored[0]!;
     const runnerUp = scored[1]?.score ?? 0;
     if (best.score < MATCH_THRESHOLD) {
