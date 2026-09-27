@@ -15,7 +15,7 @@ import { LocalStore, type Store } from "./store";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = resolve(HERE, "../../..");
-export const FIXTURE_MEDIA = join(REPO_ROOT, "fixtures/media");
+export const FIXTURE_MEDIA = process.env.MANTEL_FIXTURES ?? join(REPO_ROOT, "fixtures/media");
 
 export async function buildMantel(config: Config, log?: (msg: string, extra?: Record<string, unknown>) => void): Promise<Mantel> {
   const store: Store =

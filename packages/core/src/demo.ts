@@ -9,7 +9,7 @@
 
 import type { Household, MantelEvent, PlanItem, Topic } from "./model";
 import { mulberry32, simulate } from "./sim";
-import type { DayFeatures } from "./signal";
+import { runSignal, type DayFeatures } from "./signal";
 import { builtinTopics } from "./topics";
 import { addDays, localParts, parseClock, weekdayOf, zonedInstant } from "./time";
 
@@ -255,19 +255,30 @@ export function eventsFromFeatures(h: Household, days: DayFeatures[], seed = 7):
 /**
  * Forty care days ending yesterday, with a strong sudden change that started
  * the day before yesterday: the story the demo's Change Signal alert tells.
- * Seed 7 is the one whose alert lands on yesterday itself, which is the
- * morning the film shows.
+ *
+ * Simulated households have weekly rhythms, so whether a given household's
+ * alert lands on yesterday depends on the weekday. The demo takes the first
+ * household, in seed order, whose alert lands on yesterday and on no day
+ * before it, so the story holds on any day it is run.
  */
-export function demoHistory(h: Household, now: Date): { days: DayFeatures[]; events: MantelEvent[] } {
+export function demoHistory(h: Household, now: Date): { days: DayFeatures[]; events: MantelEvent[]; seed: number } {
   const today = localParts(now, h.settings.timezone).date;
   const nDays = 40;
-  const tape = simulate(7, {
+  const opts = {
     days: nDays,
     startDate: addDays(today, -nDays),
-    intensity: "strong",
+    intensity: "strong" as const,
     onset: nDays - 2,
-    ramp: 1,
+    ramp: 1 as const,
     series: { questions: true, night: true, firstSeen: true },
-  });
-  return { days: tape.days, events: eventsFromFeatures(h, tape.days) };
+  };
+  for (let seed = 1; seed <= 200; seed++) {
+    const tape = simulate(seed, opts);
+    const decisions = runSignal(tape.days);
+    if (decisions.at(-1)!.alert && !decisions.slice(0, -1).some((d) => d.alert)) {
+      return { days: tape.days, events: eventsFromFeatures(h, tape.days), seed };
+    }
+  }
+  const tape = simulate(7, opts);
+  return { days: tape.days, events: eventsFromFeatures(h, tape.days), seed: 7 };
 }
