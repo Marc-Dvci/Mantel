@@ -1,0 +1,487 @@
+[
+  {
+    "set": "holdout2",
+    "n": 73,
+    "answerable": 43,
+    "correct": 36,
+    "wrongTopic": 0,
+    "missed": 7,
+    "unanswerable": 30,
+    "falseAnswers": 2,
+    "rows": [
+      {
+        "text": "excuse me what day is it",
+        "expect": "builtin-day",
+        "got": "builtin-day",
+        "score": 0.707
+      },
+      {
+        "text": "what's the date today dear",
+        "expect": "builtin-day",
+        "got": "builtin-day",
+        "score": 1
+      },
+      {
+        "text": "is today wednesday",
+        "expect": "builtin-day",
+        "got": "builtin-day",
+        "score": 0.9
+      },
+      {
+        "text": "what day are we on",
+        "expect": "builtin-day",
+        "got": "builtin-day",
+        "score": 0.9
+      },
+      {
+        "text": "do you know what day it is",
+        "expect": "builtin-day",
+        "got": "builtin-day",
+        "score": 0.9
+      },
+      {
+        "text": "what month is this",
+        "expect": "builtin-day",
+        "got": "builtin-day",
+        "score": 0.9
+      },
+      {
+        "text": "what time do you make it",
+        "expect": "builtin-time",
+        "got": "builtin-time",
+        "score": 0.607
+      },
+      {
+        "text": "is it evening already",
+        "expect": "builtin-time",
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "what's the time please",
+        "expect": "builtin-time",
+        "got": "builtin-time",
+        "score": 1
+      },
+      {
+        "text": "what's going on today",
+        "expect": "builtin-next",
+        "got": null,
+        "reason": "ambiguous",
+        "score": 0.9
+      },
+      {
+        "text": "what have we got on today",
+        "expect": "builtin-next",
+        "got": null,
+        "reason": "ambiguous",
+        "score": 0.9
+      },
+      {
+        "text": "what's happening next",
+        "expect": "builtin-next",
+        "got": "builtin-next",
+        "score": 0.9
+      },
+      {
+        "text": "are we doing anything today",
+        "expect": "builtin-next",
+        "got": "builtin-next",
+        "score": 0.733
+      },
+      {
+        "text": "is anyone coming round today",
+        "expect": "builtin-visitors",
+        "got": "builtin-visitors",
+        "score": 0.9
+      },
+      {
+        "text": "who's visiting me today",
+        "expect": "builtin-visitors",
+        "got": "builtin-visitors",
+        "score": 0.847
+      },
+      {
+        "text": "is somebody coming to see me",
+        "expect": "builtin-visitors",
+        "got": "builtin-visitors",
+        "score": 0.864
+      },
+      {
+        "text": "have i had my dinner",
+        "expect": "builtin-meal",
+        "got": "builtin-meal",
+        "score": 0.9
+      },
+      {
+        "text": "when's lunch",
+        "expect": "builtin-meal",
+        "got": "builtin-meal",
+        "score": 1
+      },
+      {
+        "text": "did i eat lunch",
+        "expect": "builtin-meal",
+        "got": "builtin-meal",
+        "score": 0.795
+      },
+      {
+        "text": "did someone give me my pills",
+        "expect": "builtin-pills",
+        "got": "builtin-pills",
+        "score": 0.622
+      },
+      {
+        "text": "have i had my medication",
+        "expect": "builtin-pills",
+        "got": "builtin-pills",
+        "score": 0.9
+      },
+      {
+        "text": "i want to go back home",
+        "expect": "builtin-where",
+        "got": "builtin-where",
+        "score": 0.808
+      },
+      {
+        "text": "where is this",
+        "expect": "builtin-where",
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "is this where i live",
+        "expect": "builtin-where",
+        "got": "builtin-where",
+        "score": 0.9
+      },
+      {
+        "text": "when's sarah coming",
+        "expect": "visit-sarah",
+        "got": "visit-sarah",
+        "score": 1
+      },
+      {
+        "text": "is my daughter coming today",
+        "expect": "visit-sarah",
+        "got": "visit-sarah",
+        "score": 1
+      },
+      {
+        "text": "when will sarah be here",
+        "expect": "visit-sarah",
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "is sarah visiting",
+        "expect": "visit-sarah",
+        "got": "visit-sarah",
+        "score": 0.9
+      },
+      {
+        "text": "i'd like to see sarah",
+        "expect": "visit-sarah",
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "when's tom coming to see me",
+        "expect": "visit-tom",
+        "got": "visit-tom",
+        "score": 0.707
+      },
+      {
+        "text": "is my grandson visiting",
+        "expect": "visit-tom",
+        "got": "visit-tom",
+        "score": 0.9
+      },
+      {
+        "text": "where's my husband",
+        "expect": "topic-robert",
+        "got": "topic-robert",
+        "score": 1
+      },
+      {
+        "text": "when's robert coming back",
+        "expect": "topic-robert",
+        "got": "topic-robert",
+        "score": 0.6
+      },
+      {
+        "text": "is robert still at work",
+        "expect": "topic-robert",
+        "got": "topic-robert",
+        "score": 0.9
+      },
+      {
+        "text": "has bob called",
+        "expect": "topic-robert",
+        "got": "topic-robert",
+        "score": 1
+      },
+      {
+        "text": "i want to see robert now",
+        "expect": "topic-robert",
+        "got": "topic-robert",
+        "score": 1
+      },
+      {
+        "text": "has biscuit had his dinner",
+        "expect": "topic-biscuit",
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "where's the dog",
+        "expect": "topic-biscuit",
+        "got": "topic-biscuit",
+        "score": 1
+      },
+      {
+        "text": "did anyone feed the dog",
+        "expect": "topic-biscuit",
+        "got": "topic-biscuit",
+        "score": 0.795
+      },
+      {
+        "text": "has somebody taken my purse",
+        "expect": "topic-purse",
+        "got": "topic-purse",
+        "score": 0.9
+      },
+      {
+        "text": "where did my purse go",
+        "expect": "topic-purse",
+        "got": "topic-purse",
+        "score": 0.707
+      },
+      {
+        "text": "who's paying the bills",
+        "expect": "topic-bills",
+        "got": "topic-bills",
+        "score": 0.9
+      },
+      {
+        "text": "have the bills been paid",
+        "expect": "topic-bills",
+        "got": "topic-bills",
+        "score": 0.9
+      },
+      {
+        "text": "where are my slippers",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "is it going to snow",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "what's that noise",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "where is my father",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "when is my brother coming",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0.28
+      },
+      {
+        "text": "is he coming",
+        "expect": null,
+        "got": null,
+        "reason": "unknown-person",
+        "score": 0
+      },
+      {
+        "text": "where did she go",
+        "expect": null,
+        "got": null,
+        "reason": "unknown-person",
+        "score": 0
+      },
+      {
+        "text": "who are you",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "what's this programme",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "can i have a cup of tea",
+        "expect": null,
+        "got": "builtin-meal",
+        "score": 0.707
+      },
+      {
+        "text": "where's the bathroom",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "is the oven on",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "did i lock the door",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "where are my teeth",
+        "expect": null,
+        "got": null,
+        "reason": "no-match",
+        "score": 0
+      },
+      {
+        "text": "what year was i born",
+        "expect": null,
+        "got": "builtin-day",
+        "score": 0.707
+      },
+      {
+        "text": "sarah looks tired",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "robert fixed that chair",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "the dog's asleep",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "my purse is in the kitchen",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "dinner smells good",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "that man on the television",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "and the winner is",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "thank you very much",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "we'll see",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "i'm going to have a nap",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "look at the birds",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "coming up next on the show",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "the stock market fell today",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "i love this film",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      },
+      {
+        "text": "oh no",
+        "expect": null,
+        "got": null,
+        "reason": "not-a-question",
+        "score": 0
+      }
+    ]
+  }
+]

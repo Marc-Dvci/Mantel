@@ -73,7 +73,7 @@ const CANON: Record<string, string> = {
   today: "today", tonight: "tonight",
   clock: "time", oclock: "time", hour: "time",
   date: "date", day: "day", days: "day", month: "month", year: "year",
-  lunch: "lunch", dinner: "dinner", supper: "dinner", breakfast: "breakfast", tea: "dinner",
+  lunch: "lunch", dinner: "dinner", supper: "dinner", breakfast: "breakfast",
   husband: "husband", wife: "wife", hubby: "husband",
   going: "go", went: "go", gone: "go", goes: "go",
   nighttime: "night", hungry: "eat", starving: "eat",
@@ -174,6 +174,7 @@ const PHRASES: [RegExp, string][] = [
   [/\bcome round\b/g, "come"],
   [/\bcoming round\b/g, "come"],
   [/\bpop in\b/g, "come"],
+  [/\bbe here\b/g, "come"],
 ];
 
 function contentTokens(text: string): string[] {

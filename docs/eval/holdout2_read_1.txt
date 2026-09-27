@@ -1,0 +1,11 @@
+set       items  answered right  wrong topic  missed  false answers  wrong answers
+holdout2     73     36/43 83.7%            0       7           2/30              2
+  [holdout2] "is it evening already" expected builtin-time got null (no-match 0)
+  [holdout2] "what's going on today" expected builtin-next got null (ambiguous 0.9)
+  [holdout2] "what have we got on today" expected builtin-next got null (ambiguous 0.9)
+  [holdout2] "where is this" expected builtin-where got null (no-match 0)
+  [holdout2] "when will sarah be here" expected visit-sarah got null (no-match 0)
+  [holdout2] "i'd like to see sarah" expected visit-sarah got null (not-a-question 0)
+  [holdout2] "has biscuit had his dinner" expected topic-biscuit got null (no-match 0)
+  [holdout2] "can i have a cup of tea" expected null got builtin-meal ( 0.707)
+  [holdout2] "what year was i born" expected null got builtin-day ( 0.707)
