@@ -70,7 +70,7 @@ The same TypeScript core (`packages/core`) runs on the TV, on the server and in 
 | Second held-out read (73 sentences) | 36 of 43 right, **0 answered with the wrong topic**, 2 of 30 answered with a true statement | [docs/eval/holdout2_read_1.txt](docs/eval/holdout2_read_1.txt) |
 | Spoken: all three sets said by 4 voices and recognised by the TV's own Vosk model (1,056 utterances) | 81.4% to 89.2% right per set, **0 answered with the wrong topic** | [docs/EVAL.md](docs/EVAL.md) |
 | Change Signal, 40 held-out simulated households, each with a matched null | strong changes caught within 48 h: **70.0%**, at **0.148 false alerts per household-month**; alerting on questions alone: 52.5% at 0.780 | [docs/eval/signal_holdout_read_1.txt](docs/eval/signal_holdout_read_1.txt) |
-| Speech on the Fire OS stack | the Android app recognised "when is sarah coming" from audio with the on-device model and showed Sarah's answer | [docs/FIRE_TV.md](docs/FIRE_TV.md) |
+| Speech, end to end | in the Android TV API 30 emulator (Fire OS 8's Android base), the app recognised "when is sarah coming" from audio with its on-device model and showed Sarah's answer | [docs/FIRE_TV.md](docs/FIRE_TV.md) |
 | Tests | 93 TypeScript tests (core, server over HTTP, CDK, the real interfaces in Chromium), 5 on the DynamoDB engine, 8 Android unit tests | `pnpm test`, Gradle |
 
 The Change Signal figures are from a simulation of the method. They make no clinical claim. [docs/EVAL.md](docs/EVAL.md) has the method, the order of commits, and every number.
