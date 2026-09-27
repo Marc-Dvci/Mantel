@@ -1,5 +1,4 @@
 import {
-  acceptModelDigest,
   baseline,
   changeAlert,
   checkDraft,
@@ -10,7 +9,8 @@ import {
   readDay,
   runSignal,
   simulate,
-  templateDigest,
+  digestProse,
+  makeDigest,
   type DayFeatures,
 } from "../packages/core/src";
 import { at, household } from "./helpers";
@@ -129,20 +129,17 @@ describe("digest", () => {
     const { events } = demoHistory(h, at("07:30"));
     const date = "2026-09-20";
     const f = digestFacts(h, events, date, at("07:30").getTime(), { questions: 12 });
-    const text = templateDigest(f);
-    expect(text).toMatch(/^Margaret was first seen at \d+:\d\d/);
+    const text = digestProse(f);
+    expect(text).toMatch(/^Margaret was first seen at \d+:\d\d am/);
     expect(text).toMatch(/questions \(usually about 12\)/);
   });
 
-  it("takes a model's wording only if it adds no name or number", () => {
+  it("carries every count, and nothing a count does not support", () => {
     const { h } = household();
     const { events } = demoHistory(h, at("07:30"));
-    const f = digestFacts(h, events, "2026-09-20", at("07:30").getTime());
-    expect(acceptModelDigest(h, f, `Margaret asked ${f.questions} questions today.`).source).toBe("model");
-    expect(acceptModelDigest(h, f, `Margaret asked ${f.questions + 1000} questions today.`).source).toBe("template");
-    expect(acceptModelDigest(h, f, "Margaret talked about Dorothy.").source).toBe("template");
-    expect(acceptModelDigest(h, f, "Margaret seems to be getting worse.").source).toBe("template");
-    expect(acceptModelDigest(h, f, undefined).source).toBe("template");
+    const d = makeDigest(digestFacts(h, events, "2026-09-20", at("07:30").getTime(), { questions: 12 }));
+    expect(d.prose).toContain(`${d.facts.questions} questions`);
+    expect(d.prose).not.toMatch(/quiet|calm|good day|bad day|worse|better|many|several/i);
   });
 
   it("draft checks reject death words unless the family used them", () => {

@@ -28,7 +28,7 @@ export interface Config {
     outsideDoors: string[];
   };
   bedrock?: { endpoint?: string; modelId: string };
-  polly?: { voiceId: string; engine: "neural" | "standard" | "generative" };
+  polly?: { voiceId: string; engine: "neural" | "standard" | "generative"; profile?: string };
   /** Secret for media links and pairing tokens. */
   secret: string;
 }
@@ -62,7 +62,13 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
         }
       : {}),
     ...(env.MANTEL_POLLY === "1"
-      ? { polly: { voiceId: env.MANTEL_POLLY_VOICE ?? "Joanna", engine: (env.MANTEL_POLLY_ENGINE as "neural") ?? "neural" } }
+      ? {
+          polly: {
+            voiceId: env.MANTEL_POLLY_VOICE ?? "Joanna",
+            engine: (env.MANTEL_POLLY_ENGINE as "neural") ?? "neural",
+            ...(env.MANTEL_POLLY_PROFILE ? { profile: env.MANTEL_POLLY_PROFILE } : {}),
+          },
+        }
       : {}),
     secret: env.MANTEL_SECRET ?? "mantel-local-secret",
   };

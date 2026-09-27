@@ -86,11 +86,16 @@ function main() {
   const jsonOut = args.includes("--json") ? args[args.indexOf("--json") + 1] : undefined;
   const sets = (only ? [only] : ["dev", "holdout", "holdout2"]).filter((s) => load(s).length);
   const results = sets.map((s) => evaluate(s, load(s)));
-  console.log("set       items  answered right  wrong topic  missed  false answers  wrong answers");
+  // The same sets as the TV's recogniser heard them (tools/eval/spoken.py): four voices each.
+  for (const s of sets) {
+    const spoken = load(`spoken-${s}`) as unknown as { heard: string; expect: string | null }[];
+    if (spoken.length) results.push(evaluate(`${s}:spoken`, spoken.map((r) => ({ text: r.heard, expect: r.expect }))));
+  }
+  console.log("set               items  answered right  wrong topic  missed  false answers  wrong answers");
   for (const r of results) {
     const wrong = r.wrongTopic + r.falseAnswers;
     console.log(
-      `${r.set.padEnd(9)} ${String(r.n).padStart(5)}  ${`${r.correct}/${r.answerable} ${pct(r.correct, r.answerable)}`.padStart(14)}  ${String(r.wrongTopic).padStart(11)}  ${String(r.missed).padStart(6)}  ${`${r.falseAnswers}/${r.unanswerable}`.padStart(13)}  ${String(wrong).padStart(13)}`,
+      `${r.set.padEnd(17)} ${String(r.n).padStart(5)}  ${`${r.correct}/${r.answerable} ${pct(r.correct, r.answerable)}`.padStart(14)}  ${String(r.wrongTopic).padStart(11)}  ${String(r.missed).padStart(6)}  ${`${r.falseAnswers}/${r.unanswerable}`.padStart(13)}  ${String(wrong).padStart(13)}`,
     );
   }
   if (args.includes("--misses")) {

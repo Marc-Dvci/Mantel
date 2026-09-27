@@ -190,7 +190,6 @@ describe("family API", () => {
   it("writes a digest for a past day from counts", async () => {
     const d = await call("/api/family/digest/2026-09-27", { token: "demo-sarah" });
     expect(d.status).toBe(200);
-    expect(d.body.source).toBe("template");
     expect(d.body.prose).toMatch(/^Margaret was first seen at/);
   });
 

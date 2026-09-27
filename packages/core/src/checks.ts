@@ -1,10 +1,9 @@
 /**
  * Checks on words a model drafted.
  *
- * A model drafts three things in Mantel: photo captions, a calmer wording of an
- * answer a family member typed, and the prose of the evening digest. None of
- * them reaches the TV or the family without passing here, and captions and
- * answers additionally wait for a family member's approval.
+ * A model drafts two things in Mantel: photo captions, and a calmer wording of
+ * an answer a family member typed. Neither reaches the family without passing
+ * here, and neither reaches the TV until a family member approves it.
  *
  * A draft fails if it introduces a name or a number its inputs did not contain,
  * runs too long, or uses words the product never says.
@@ -17,7 +16,6 @@ export interface DraftCheck {
   problems: string[];
 }
 
-const NEVER_IN_DIGEST = [/diagnos/i, /delirium/i, /\buti\b/i, /infection/i, /deteriorat/i, /declin/i, /getting worse/i, /\bworse\b/i];
 const DEATH_WORDS = [/\bdied\b/i, /\bdead\b/i, /passed away/i, /\bdeath\b/i, /\bfuneral\b/i, /\bgrave\b/i];
 
 const COMMON_CAPITALS = new Set([
@@ -27,7 +25,7 @@ const COMMON_CAPITALS = new Set([
   "Mantel", "Today", "Yesterday", "Tonight", "Yes", "No", "Next", "Nobody", "Everyone", "Lunch", "Dinner", "Breakfast",
   "Pills", "Asked", "First", "Last", "Up", "Nothing", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
   "Most", "Questions", "Doorbell", "Door", "Messages", "Message", "Moments", "Photos", "Stories", "At", "In", "On", "After", "Before",
-  "Her", "His", "Their", "Also", "Otherwise", "Overall", "All", "Some", "Both", "No-one",
+  "Her", "His", "Their", "Also", "Otherwise", "Overall", "All", "Some", "Both", "No-one", "Several", "Many", "Few", "Shall",
 ]);
 
 /**
@@ -51,7 +49,6 @@ export interface DraftRules {
   maxChars: number;
   maxSentences?: number;
   allowDeathWords?: boolean;
-  digest?: boolean;
 }
 
 export function checkDraft(draft: string, rules: DraftRules): DraftCheck {
@@ -72,6 +69,5 @@ export function checkDraft(draft: string, rules: DraftRules): DraftCheck {
     if (!allowedNumbers.has(n) && !allowedNumbers.has(String(Number(n)))) problems.push(`introduces the number ${n}`);
   }
   if (!rules.allowDeathWords) for (const re of DEATH_WORDS) if (re.test(text)) problems.push(`uses "${re.source.replace(/\\b/g, "")}"`);
-  if (rules.digest) for (const re of NEVER_IN_DIGEST) if (re.test(text)) problems.push(`digest uses "${re.source.replace(/\\b/g, "")}"`);
   return { ok: problems.length === 0, problems };
 }

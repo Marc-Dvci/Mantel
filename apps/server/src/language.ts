@@ -1,13 +1,16 @@
 /**
  * Amazon Bedrock and Amazon Polly, where a model helps and cannot decide.
  *
- * Bedrock drafts three kinds of words: a photo caption from the facts a family
- * member typed, a calmer version of an answer a family member wrote, and the
- * evening digest's prose from the day's counts. Every draft passes `checkDraft`
- * (no new names, no new numbers, no death words unless the family used them,
- * no diagnostic words in a digest) and captions and answers then wait for a
- * family member's approval. A draft that fails the check is replaced by the
- * deterministic version, and the family app shows which one it is.
+ * Bedrock drafts two kinds of words: a photo caption from the facts a family
+ * member typed, and a calmer version of an answer a family member wrote. Every
+ * draft passes `checkDraft` (no new names, no new numbers, no death words
+ * unless the family used them) and then waits for a family member to use it or
+ * not. A draft that fails the check is replaced by the family's own words.
+ *
+ * The evening digest is not written by a model. A model given the day's counts
+ * replaced them with "many" and "several" and added readings such as "the
+ * evening was spent quietly" that no count supports, so the digest stays a
+ * template over the counts. See docs/MODEL.md.
  *
  * Polly voices the answers a family member wrote but did not record, so the TV
  * speaks with one consistent voice rather than whatever engine a device has.
@@ -15,12 +18,10 @@
 
 import { createHash } from "node:crypto";
 import { PollyClient, SynthesizeSpeechCommand } from "@aws-sdk/client-polly";
+import { fromIni } from "@aws-sdk/credential-providers";
 import {
-  acceptModelDigest,
   checkDraft,
   numbersIn,
-  type Digest,
-  type DigestFacts,
   type Household,
   type TruthPolicy,
 } from "../../../packages/core/src";
@@ -47,7 +48,10 @@ export async function modelFromConfig(config: Config): Promise<ModelClient | und
           headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
           body: JSON.stringify({
             model: b.modelId,
-            max_tokens: 700,
+            // Reasoning models spend part of the budget thinking before they answer;
+            // too small a budget returns an empty answer.
+            max_tokens: 2500,
+            ...(b.modelId.startsWith("openai.gpt-oss") ? { reasoning_effort: "low" } : {}),
             messages: [
               { role: "system", content: system },
               { role: "user", content: user },
@@ -69,7 +73,7 @@ export async function modelFromConfig(config: Config): Promise<ModelClient | und
           modelId: b.modelId,
           system: [{ text: system }],
           messages: [{ role: "user", content: [{ text: user }] }],
-          inferenceConfig: { maxTokens: 700 },
+          inferenceConfig: { maxTokens: 2500 },
         }),
       );
       return stripReasoning((out.output?.message?.content ?? []).map((c) => ("text" in c ? c.text : "")).join(""));
@@ -103,8 +107,9 @@ export function templateCaption(c: CaptionInput): string {
 }
 
 const CAPTION_SYSTEM = `You write one caption for a family photograph that will be shown on a television to a person living with dementia.
-Speak to the person as "you". Use only the names, place and year you are given, and nothing else you might guess.
-One sentence, at most 16 words, warm and plain, no questions, no exclamation marks. Reply with the caption only.`;
+Speak to the person as "you", in one complete, grammatical sentence, for example "This is you and Robert at the beach in 1970."
+Use only the names, place and year you are given, and nothing else you might guess.
+At most 16 words, warm and plain, no questions, no exclamation marks. Reply with the caption only.`;
 
 export async function draftCaption(h: Household, model: ModelClient | undefined, c: CaptionInput): Promise<Drafted> {
   const template = templateCaption(c);
@@ -154,19 +159,6 @@ export async function draftAnswer(h: Household, model: ModelClient | undefined, 
   return check.ok ? { text: out, source: "model", problems: [] } : { text: original, source: "template", problems: check.problems };
 }
 
-const DIGEST_SYSTEM = `You write the evening summary a family caregiver reads about their relative's day, from the facts given as JSON.
-Plain sentences, at most 6, no headings, no lists. Use only the facts given: never add a number, a name or an interpretation.
-Never describe health, never guess causes, never say anything is better or worse. Reply with the summary only.`;
-
-export async function writeDigest(h: Household, model: ModelClient | undefined, facts: DigestFacts): Promise<Digest> {
-  if (!model) return acceptModelDigest(h, facts, undefined);
-  try {
-    return acceptModelDigest(h, facts, await model.complete(DIGEST_SYSTEM, JSON.stringify(facts)));
-  } catch {
-    return acceptModelDigest(h, facts, undefined);
-  }
-}
-
 export interface Voice {
   /** Returns MP3 bytes. */
   synthesize(text: string): Promise<Buffer>;
@@ -175,7 +167,10 @@ export interface Voice {
 
 export function pollyVoice(config: Config): Voice | undefined {
   if (!config.polly) return undefined;
-  const client = new PollyClient({ region: config.region });
+  const client = new PollyClient({
+    region: config.region,
+    ...(config.polly.profile ? { credentials: fromIni({ profile: config.polly.profile }) } : {}),
+  });
   const { voiceId, engine } = config.polly;
   return {
     id: `polly-${engine}-${voiceId}`,

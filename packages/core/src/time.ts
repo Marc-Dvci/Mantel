@@ -164,6 +164,11 @@ export function clockFace(minuteOfDay: number): string {
   return `${h12}:${pad(minuteOfDay % 60)}`;
 }
 
+/** "9:13 pm", for the family, who read times out of context. */
+export function clockWithPeriod(minuteOfDay: number): string {
+  return `${clockFace(minuteOfDay)} ${minuteOfDay % 1440 < 720 ? "am" : "pm"}`;
+}
+
 /** "September 29". */
 export function longDate(date: string): string {
   const [, m, d] = date.split("-").map(Number) as [number, number, number];

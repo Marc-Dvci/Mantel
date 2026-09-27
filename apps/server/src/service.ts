@@ -12,6 +12,7 @@ import {
   decideDoor,
   digestFacts,
   localParts,
+  makeDigest,
   median,
   nightDoorAlert,
   nightPresenceAlert,
@@ -25,7 +26,7 @@ import {
   type Member,
 } from "../../../packages/core/src";
 import type { Config } from "./config";
-import { writeDigest, speechMediaId, type ModelClient, type Voice } from "./language";
+import { speechMediaId, type ModelClient, type Voice } from "./language";
 import { mediaKey, newMediaId, type MediaStore } from "./media";
 import {
   BUTTON_PRESS,
@@ -399,7 +400,7 @@ export class Mantel {
     const history = await this.features(hid, h, addDays(date, -1), 28);
     const qs = history.filter((d) => !d.unusual && d.questions !== null).map((d) => d.questions!);
     const facts = digestFacts(h, events, date, this.clock.now().getTime(), qs.length >= 7 ? { questions: median(qs) } : undefined);
-    const digest = await writeDigest(h, this.deps.model, facts);
+    const digest = makeDigest(facts);
     await this.deps.store.update(hid, (st) => {
       st.digests[date] = digest;
     });

@@ -877,7 +877,7 @@ function DigestView({ o, api }: Props) {
         ) : (
           <>
             <p className="prose">{d.prose}</p>
-            <div className="muted small">{d.source === "model" ? "Written by a model from the counts below, checked to add nothing." : "Written from the counts below."}</div>
+            <div className="muted small">Written from the counts below.</div>
             <table className="facts">
               <tbody>
                 <tr>
