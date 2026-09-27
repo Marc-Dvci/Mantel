@@ -14,6 +14,7 @@ import express, { type NextFunction, type Request, type Response } from "express
 import { z } from "zod";
 import {
   GUIDANCE,
+  addDays,
   localParts,
   newTopicId,
   zonedInstant,
@@ -536,13 +537,15 @@ export function createApp(mantel: Mantel, opts: AppOptions = {}) {
     d.post(
       "/clock",
       wrap(async (req) => {
-        const body = z.object({ at: z.string().optional(), time: z.string().optional(), date: z.string().optional(), reset: z.boolean().optional() }).parse(req.body);
+        const body = z
+          .object({ at: z.string().optional(), time: z.string().optional(), date: z.string().optional(), days: z.number().int().optional(), reset: z.boolean().optional() })
+          .parse(req.body);
         const hid = await hidOf();
         const h = (await mantel.state(hid)).household;
         if (body.reset) mantel.clock.reset();
         else if (body.at) mantel.clock.setTo(new Date(body.at));
         else if (body.time) {
-          const date = body.date ?? localParts(mantel.clock.now(), h.settings.timezone).date;
+          const date = body.date ?? addDays(localParts(mantel.clock.now(), h.settings.timezone).date, body.days ?? 0);
           mantel.clock.setTo(zonedInstant(date, body.time, h.settings.timezone));
         }
         // Bump the version so every screen re-reads the time now.
