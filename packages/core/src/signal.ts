@@ -10,8 +10,9 @@
  *   nightDoorOpens  outside-door openings during the night
  *   firstSeen       minutes after the planned wake time the person was first seen
  *
- * Each value is compared with the person's own last 14 usual days (median and
- * scaled MAD), so the signal is a deviation from their own normal and a slow
+ * Each value is compared with the person's own last 28 usual days (median and
+ * scaled MAD, or mean and standard deviation for the two night series, which
+ * are mostly zero), so the signal is a deviation from their own normal and a slow
  * drift moves the baseline with it. A care day is the daytime of a date plus
  * the night that follows it, and it is evaluated the next morning. The night
  * runs from bedtime to an hour before the planned waking time, so an early
@@ -37,7 +38,7 @@ export interface DayFeatures {
   unusual?: boolean;
 }
 
-export const BASELINE_DAYS = 14;
+export const BASELINE_DAYS = 28;
 export const MIN_BASELINE_DAYS = 7;
 export const FLAG_Z = 3;
 export const PERSIST_Z = 2.5;
@@ -45,8 +46,14 @@ export const COOLDOWN_DAYS = 3;
 export const NIGHT_ENDS_BEFORE_WAKE_MIN = 60;
 
 const ABS_FLOOR: Record<Series, number> = { questions: 2, nightMinutes: 10, nightDoorOpens: 0.5, firstSeen: 20 };
-const COUNT_SERIES = new Set<Series>(["questions", "nightMinutes"]);
 const TWO_SIDED = new Set<Series>(["firstSeen"]);
+/**
+ * Most nights are zero minutes and zero door openings, so a median and MAD
+ * collapse to zero and any restless night looks extreme. These two series are
+ * centred on the mean and scaled by the standard deviation, which carries the
+ * household's normal tail of restless nights.
+ */
+const ZERO_INFLATED = new Set<Series>(["nightMinutes", "nightDoorOpens"]);
 
 export function median(xs: number[]): number {
   const s = [...xs].sort((a, b) => a - b);
@@ -63,9 +70,15 @@ export interface Baseline {
 
 export function baseline(values: number[], series: Series): Baseline | undefined {
   if (values.length < MIN_BASELINE_DAYS) return undefined;
+  if (ZERO_INFLATED.has(series)) {
+    const mean = values.reduce((a, b) => a + b, 0) / values.length;
+    const sd = Math.sqrt(values.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, values.length - 1));
+    return { median: mean, scale: Math.max(sd, ABS_FLOOR[series]), n: values.length };
+  }
   const med = median(values);
   const mad = 1.4826 * median(values.map((v) => Math.abs(v - med)));
-  const floor = COUNT_SERIES.has(series) ? Math.max(ABS_FLOOR[series], Math.sqrt(Math.max(0, med))) : ABS_FLOOR[series];
+  // Counts are at least Poisson-noisy, so the scale never drops below sqrt(median).
+  const floor = series === "questions" ? Math.max(ABS_FLOOR[series], Math.sqrt(Math.max(0, med))) : ABS_FLOOR[series];
   return { median: med, scale: Math.max(mad, floor), n: values.length };
 }
 

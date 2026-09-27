@@ -1,0 +1,4 @@
+dev seeds 1-40
+rule            strong        moderate      subtle        delay  false/household-month (nulls)  (episode tapes, off-episode)
+mantel          31/40 77.5%   16/40 40.0%   5/40 12.5%        1  0.099 (30 in 9120 days)         0.089 (23 in 7767 days)
+questions-only  21/40 52.5%   15/40 37.5%   7/40 17.5%        0  0.730 (222 in 9120 days)        0.641 (166 in 7767 days)

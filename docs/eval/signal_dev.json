@@ -1,0 +1,52 @@
+{
+  "seeds": [
+    1,
+    40
+  ],
+  "results": [
+    {
+      "rule": "mantel",
+      "detected": {
+        "strong": {
+          "hit": 31,
+          "n": 40
+        },
+        "moderate": {
+          "hit": 16,
+          "n": 40
+        },
+        "subtle": {
+          "hit": 5,
+          "n": 40
+        }
+      },
+      "medianDelay": 1,
+      "nullAlerts": 30,
+      "nullDays": 9120,
+      "offEpisodeAlerts": 23,
+      "offEpisodeDays": 7767
+    },
+    {
+      "rule": "questions-only",
+      "detected": {
+        "strong": {
+          "hit": 21,
+          "n": 40
+        },
+        "moderate": {
+          "hit": 15,
+          "n": 40
+        },
+        "subtle": {
+          "hit": 7,
+          "n": 40
+        }
+      },
+      "medianDelay": 0,
+      "nullAlerts": 222,
+      "nullDays": 9120,
+      "offEpisodeAlerts": 166,
+      "offEpisodeDays": 7767
+    }
+  ]
+}

@@ -253,16 +253,18 @@ export function eventsFromFeatures(h: Household, days: DayFeatures[], seed = 7):
 }
 
 /**
- * Thirty care days ending yesterday, with a moderate change that started the
- * day before yesterday: the story the demo's Change Signal alert tells.
+ * Forty care days ending yesterday, with a strong sudden change that started
+ * the day before yesterday: the story the demo's Change Signal alert tells.
+ * Seed 7 is the one whose alert lands on yesterday itself, which is the
+ * morning the film shows.
  */
 export function demoHistory(h: Household, now: Date): { days: DayFeatures[]; events: MantelEvent[] } {
   const today = localParts(now, h.settings.timezone).date;
-  const nDays = 30;
-  const tape = simulate(42, {
+  const nDays = 40;
+  const tape = simulate(7, {
     days: nDays,
     startDate: addDays(today, -nDays),
-    intensity: "moderate",
+    intensity: "strong",
     onset: nDays - 2,
     ramp: 1,
     series: { questions: true, night: true, firstSeen: true },

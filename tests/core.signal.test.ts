@@ -118,7 +118,8 @@ describe("simulator", () => {
     const { h, now } = household("07:30");
     const { days } = demoHistory(h, now);
     const decisions = runSignal(days);
-    expect(decisions.at(-1)!.alert || decisions.at(-2)!.alert).toBe(true);
+    expect(decisions.at(-1)!.alert).toBe(true);
+    expect(decisions.slice(0, -1).some((d) => d.alert)).toBe(false);
   });
 });
 
