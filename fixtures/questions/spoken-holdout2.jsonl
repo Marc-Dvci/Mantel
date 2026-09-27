@@ -1,0 +1,292 @@
+{"text": "excuse me what day is it", "expect": "builtin-day", "voice": "af_heart", "heard": "excuse me what day is it"}
+{"text": "excuse me what day is it", "expect": "builtin-day", "voice": "bf_emma", "heard": "excuse me what day is it"}
+{"text": "excuse me what day is it", "expect": "builtin-day", "voice": "am_michael", "heard": "excuse me what day is it"}
+{"text": "excuse me what day is it", "expect": "builtin-day", "voice": "bm_george", "heard": "excuse me what day is it"}
+{"text": "what's the date today dear", "expect": "builtin-day", "voice": "af_heart", "heard": "what's the date today dear"}
+{"text": "what's the date today dear", "expect": "builtin-day", "voice": "bf_emma", "heard": "what's the date today dear"}
+{"text": "what's the date today dear", "expect": "builtin-day", "voice": "am_michael", "heard": "what's the date today dear"}
+{"text": "what's the date today dear", "expect": "builtin-day", "voice": "bm_george", "heard": "what's the date today dear"}
+{"text": "is today wednesday", "expect": "builtin-day", "voice": "af_heart", "heard": "is today wednesday"}
+{"text": "is today wednesday", "expect": "builtin-day", "voice": "bf_emma", "heard": "is today wednesday"}
+{"text": "is today wednesday", "expect": "builtin-day", "voice": "am_michael", "heard": "is today wednesday"}
+{"text": "is today wednesday", "expect": "builtin-day", "voice": "bm_george", "heard": "is today wednesday"}
+{"text": "what day are we on", "expect": "builtin-day", "voice": "af_heart", "heard": "what day are we on"}
+{"text": "what day are we on", "expect": "builtin-day", "voice": "bf_emma", "heard": "what day a we aren't"}
+{"text": "what day are we on", "expect": "builtin-day", "voice": "am_michael", "heard": "what day are we on"}
+{"text": "what day are we on", "expect": "builtin-day", "voice": "bm_george", "heard": "what day are we on"}
+{"text": "do you know what day it is", "expect": "builtin-day", "voice": "af_heart", "heard": "do you know what day it is"}
+{"text": "do you know what day it is", "expect": "builtin-day", "voice": "bf_emma", "heard": "do you know what day it is"}
+{"text": "do you know what day it is", "expect": "builtin-day", "voice": "am_michael", "heard": "do you know what day it is"}
+{"text": "do you know what day it is", "expect": "builtin-day", "voice": "bm_george", "heard": "do you know what day it is"}
+{"text": "what month is this", "expect": "builtin-day", "voice": "af_heart", "heard": "what month is this"}
+{"text": "what month is this", "expect": "builtin-day", "voice": "bf_emma", "heard": "what month is this"}
+{"text": "what month is this", "expect": "builtin-day", "voice": "am_michael", "heard": "what month is this"}
+{"text": "what month is this", "expect": "builtin-day", "voice": "bm_george", "heard": "what month is this"}
+{"text": "what time do you make it", "expect": "builtin-time", "voice": "af_heart", "heard": "what time do you make it"}
+{"text": "what time do you make it", "expect": "builtin-time", "voice": "bf_emma", "heard": "what time do you make it"}
+{"text": "what time do you make it", "expect": "builtin-time", "voice": "am_michael", "heard": "what time do you make it"}
+{"text": "what time do you make it", "expect": "builtin-time", "voice": "bm_george", "heard": "what time do you make it"}
+{"text": "is it evening already", "expect": "builtin-time", "voice": "af_heart", "heard": "is it evening already"}
+{"text": "is it evening already", "expect": "builtin-time", "voice": "bf_emma", "heard": "is it evening already"}
+{"text": "is it evening already", "expect": "builtin-time", "voice": "am_michael", "heard": "is it evening already"}
+{"text": "is it evening already", "expect": "builtin-time", "voice": "bm_george", "heard": "is it evening already"}
+{"text": "what's the time please", "expect": "builtin-time", "voice": "af_heart", "heard": "what's the time please"}
+{"text": "what's the time please", "expect": "builtin-time", "voice": "bf_emma", "heard": "what's the time pleaser"}
+{"text": "what's the time please", "expect": "builtin-time", "voice": "am_michael", "heard": "what's the time please"}
+{"text": "what's the time please", "expect": "builtin-time", "voice": "bm_george", "heard": "what's the time please"}
+{"text": "what's going on today", "expect": "builtin-next", "voice": "af_heart", "heard": "what's going on today"}
+{"text": "what's going on today", "expect": "builtin-next", "voice": "bf_emma", "heard": "what's going on today"}
+{"text": "what's going on today", "expect": "builtin-next", "voice": "am_michael", "heard": "what's going on today"}
+{"text": "what's going on today", "expect": "builtin-next", "voice": "bm_george", "heard": "what's going on today"}
+{"text": "what have we got on today", "expect": "builtin-next", "voice": "af_heart", "heard": "what have we got on today"}
+{"text": "what have we got on today", "expect": "builtin-next", "voice": "bf_emma", "heard": "what have we got on today"}
+{"text": "what have we got on today", "expect": "builtin-next", "voice": "am_michael", "heard": "what have we got on today"}
+{"text": "what have we got on today", "expect": "builtin-next", "voice": "bm_george", "heard": "what have we got on today"}
+{"text": "what's happening next", "expect": "builtin-next", "voice": "af_heart", "heard": "what's happening next"}
+{"text": "what's happening next", "expect": "builtin-next", "voice": "bf_emma", "heard": "what's happening next"}
+{"text": "what's happening next", "expect": "builtin-next", "voice": "am_michael", "heard": "what's happening next"}
+{"text": "what's happening next", "expect": "builtin-next", "voice": "bm_george", "heard": "what's happening next"}
+{"text": "are we doing anything today", "expect": "builtin-next", "voice": "af_heart", "heard": "are we doing anything today"}
+{"text": "are we doing anything today", "expect": "builtin-next", "voice": "bf_emma", "heard": "are we doing anything today"}
+{"text": "are we doing anything today", "expect": "builtin-next", "voice": "am_michael", "heard": "are we doing anything today"}
+{"text": "are we doing anything today", "expect": "builtin-next", "voice": "bm_george", "heard": "are we doing anything today"}
+{"text": "is anyone coming round today", "expect": "builtin-visitors", "voice": "af_heart", "heard": "is anyone coming round today"}
+{"text": "is anyone coming round today", "expect": "builtin-visitors", "voice": "bf_emma", "heard": "is anyone coming round to day"}
+{"text": "is anyone coming round today", "expect": "builtin-visitors", "voice": "am_michael", "heard": "is anyone coming round today"}
+{"text": "is anyone coming round today", "expect": "builtin-visitors", "voice": "bm_george", "heard": "is anyone coming round today"}
+{"text": "who's visiting me today", "expect": "builtin-visitors", "voice": "af_heart", "heard": "who's visiting me today"}
+{"text": "who's visiting me today", "expect": "builtin-visitors", "voice": "bf_emma", "heard": "who's visiting me today"}
+{"text": "who's visiting me today", "expect": "builtin-visitors", "voice": "am_michael", "heard": "who's visiting me today"}
+{"text": "who's visiting me today", "expect": "builtin-visitors", "voice": "bm_george", "heard": "who's visiting me today"}
+{"text": "is somebody coming to see me", "expect": "builtin-visitors", "voice": "af_heart", "heard": "is somebody coming to see me"}
+{"text": "is somebody coming to see me", "expect": "builtin-visitors", "voice": "bf_emma", "heard": "is somebody coming to see me"}
+{"text": "is somebody coming to see me", "expect": "builtin-visitors", "voice": "am_michael", "heard": "is somebody coming to see me"}
+{"text": "is somebody coming to see me", "expect": "builtin-visitors", "voice": "bm_george", "heard": "is somebody coming to see me"}
+{"text": "have i had my dinner", "expect": "builtin-meal", "voice": "af_heart", "heard": "have i had my dinner"}
+{"text": "have i had my dinner", "expect": "builtin-meal", "voice": "bf_emma", "heard": "have i had my dinners"}
+{"text": "have i had my dinner", "expect": "builtin-meal", "voice": "am_michael", "heard": "have i had my dinner"}
+{"text": "have i had my dinner", "expect": "builtin-meal", "voice": "bm_george", "heard": "have i had my dinner"}
+{"text": "when's lunch", "expect": "builtin-meal", "voice": "af_heart", "heard": "when's lunch"}
+{"text": "when's lunch", "expect": "builtin-meal", "voice": "bf_emma", "heard": "when's lunch"}
+{"text": "when's lunch", "expect": "builtin-meal", "voice": "am_michael", "heard": "when's lunch"}
+{"text": "when's lunch", "expect": "builtin-meal", "voice": "bm_george", "heard": "wins lungi"}
+{"text": "did i eat lunch", "expect": "builtin-meal", "voice": "af_heart", "heard": "did i eat lunch"}
+{"text": "did i eat lunch", "expect": "builtin-meal", "voice": "bf_emma", "heard": "did i eat lunch"}
+{"text": "did i eat lunch", "expect": "builtin-meal", "voice": "am_michael", "heard": "did i eat lunch"}
+{"text": "did i eat lunch", "expect": "builtin-meal", "voice": "bm_george", "heard": "did i eat lunch"}
+{"text": "did someone give me my pills", "expect": "builtin-pills", "voice": "af_heart", "heard": "did someone give me my pills"}
+{"text": "did someone give me my pills", "expect": "builtin-pills", "voice": "bf_emma", "heard": "did someone gave me my pills"}
+{"text": "did someone give me my pills", "expect": "builtin-pills", "voice": "am_michael", "heard": "did someone give me my pills"}
+{"text": "did someone give me my pills", "expect": "builtin-pills", "voice": "bm_george", "heard": "did someone give me my pills"}
+{"text": "have i had my medication", "expect": "builtin-pills", "voice": "af_heart", "heard": "have i had my medication"}
+{"text": "have i had my medication", "expect": "builtin-pills", "voice": "bf_emma", "heard": "have i had my medication"}
+{"text": "have i had my medication", "expect": "builtin-pills", "voice": "am_michael", "heard": "have i had my medication"}
+{"text": "have i had my medication", "expect": "builtin-pills", "voice": "bm_george", "heard": "have i had my medication"}
+{"text": "i want to go back home", "expect": "builtin-where", "voice": "af_heart", "heard": "i want to go back home"}
+{"text": "i want to go back home", "expect": "builtin-where", "voice": "bf_emma", "heard": "i want to go back homes"}
+{"text": "i want to go back home", "expect": "builtin-where", "voice": "am_michael", "heard": "i want to go back home"}
+{"text": "i want to go back home", "expect": "builtin-where", "voice": "bm_george", "heard": "i want to go back homes"}
+{"text": "where is this", "expect": "builtin-where", "voice": "af_heart", "heard": "where is this"}
+{"text": "where is this", "expect": "builtin-where", "voice": "bf_emma", "heard": "where is this"}
+{"text": "where is this", "expect": "builtin-where", "voice": "am_michael", "heard": "where is this"}
+{"text": "where is this", "expect": "builtin-where", "voice": "bm_george", "heard": "where is this"}
+{"text": "is this where i live", "expect": "builtin-where", "voice": "af_heart", "heard": "is this where island"}
+{"text": "is this where i live", "expect": "builtin-where", "voice": "bf_emma", "heard": "is this where i live"}
+{"text": "is this where i live", "expect": "builtin-where", "voice": "am_michael", "heard": "is this where i live"}
+{"text": "is this where i live", "expect": "builtin-where", "voice": "bm_george", "heard": "is this where i live"}
+{"text": "when's sarah coming", "expect": "visit-sarah", "voice": "af_heart", "heard": "when sarah coming"}
+{"text": "when's sarah coming", "expect": "visit-sarah", "voice": "bf_emma", "heard": "when sarah coming"}
+{"text": "when's sarah coming", "expect": "visit-sarah", "voice": "am_michael", "heard": "when sarah coming"}
+{"text": "when's sarah coming", "expect": "visit-sarah", "voice": "bm_george", "heard": "when sarah coming"}
+{"text": "is my daughter coming today", "expect": "visit-sarah", "voice": "af_heart", "heard": "is my daughter coming today"}
+{"text": "is my daughter coming today", "expect": "visit-sarah", "voice": "bf_emma", "heard": "is my daughter coming today"}
+{"text": "is my daughter coming today", "expect": "visit-sarah", "voice": "am_michael", "heard": "is my daughter coming today"}
+{"text": "is my daughter coming today", "expect": "visit-sarah", "voice": "bm_george", "heard": "is my daughter coming today"}
+{"text": "when will sarah be here", "expect": "visit-sarah", "voice": "af_heart", "heard": "when will sarah be here"}
+{"text": "when will sarah be here", "expect": "visit-sarah", "voice": "bf_emma", "heard": "when will sarah be here"}
+{"text": "when will sarah be here", "expect": "visit-sarah", "voice": "am_michael", "heard": "when will sarah be here"}
+{"text": "when will sarah be here", "expect": "visit-sarah", "voice": "bm_george", "heard": "when will sarah be here"}
+{"text": "is sarah visiting", "expect": "visit-sarah", "voice": "af_heart", "heard": "is sarah visiting"}
+{"text": "is sarah visiting", "expect": "visit-sarah", "voice": "bf_emma", "heard": "is sarah visiting"}
+{"text": "is sarah visiting", "expect": "visit-sarah", "voice": "am_michael", "heard": "is sarah visiting"}
+{"text": "is sarah visiting", "expect": "visit-sarah", "voice": "bm_george", "heard": "is sarah visiting"}
+{"text": "i'd like to see sarah", "expect": "visit-sarah", "voice": "af_heart", "heard": "i'd like to see sarah"}
+{"text": "i'd like to see sarah", "expect": "visit-sarah", "voice": "bf_emma", "heard": "i'd like to see sarah"}
+{"text": "i'd like to see sarah", "expect": "visit-sarah", "voice": "am_michael", "heard": "i'd like to see sarah"}
+{"text": "i'd like to see sarah", "expect": "visit-sarah", "voice": "bm_george", "heard": "i'd like to see cerro"}
+{"text": "when's tom coming to see me", "expect": "visit-tom", "voice": "af_heart", "heard": "when's tom coming to see me"}
+{"text": "when's tom coming to see me", "expect": "visit-tom", "voice": "bf_emma", "heard": "when tom coming to see me"}
+{"text": "when's tom coming to see me", "expect": "visit-tom", "voice": "am_michael", "heard": "when tom coming to see me"}
+{"text": "when's tom coming to see me", "expect": "visit-tom", "voice": "bm_george", "heard": "when's tom coming to see me"}
+{"text": "is my grandson visiting", "expect": "visit-tom", "voice": "af_heart", "heard": "is my grandson visiting"}
+{"text": "is my grandson visiting", "expect": "visit-tom", "voice": "bf_emma", "heard": "is my grandson visiting"}
+{"text": "is my grandson visiting", "expect": "visit-tom", "voice": "am_michael", "heard": "is my grandson visiting"}
+{"text": "is my grandson visiting", "expect": "visit-tom", "voice": "bm_george", "heard": "is my grandson visiting"}
+{"text": "where's my husband", "expect": "topic-robert", "voice": "af_heart", "heard": "where's my husband"}
+{"text": "where's my husband", "expect": "topic-robert", "voice": "bf_emma", "heard": "where's my husband"}
+{"text": "where's my husband", "expect": "topic-robert", "voice": "am_michael", "heard": "where's my husband"}
+{"text": "where's my husband", "expect": "topic-robert", "voice": "bm_george", "heard": "where's my husband"}
+{"text": "when's robert coming back", "expect": "topic-robert", "voice": "af_heart", "heard": "wins robert coming back"}
+{"text": "when's robert coming back", "expect": "topic-robert", "voice": "bf_emma", "heard": "when's robert coming back"}
+{"text": "when's robert coming back", "expect": "topic-robert", "voice": "am_michael", "heard": "wins robert coming back"}
+{"text": "when's robert coming back", "expect": "topic-robert", "voice": "bm_george", "heard": "wins robert coming back"}
+{"text": "is robert still at work", "expect": "topic-robert", "voice": "af_heart", "heard": "is robert still at work"}
+{"text": "is robert still at work", "expect": "topic-robert", "voice": "bf_emma", "heard": "is robert still at work"}
+{"text": "is robert still at work", "expect": "topic-robert", "voice": "am_michael", "heard": "is robert still at work"}
+{"text": "is robert still at work", "expect": "topic-robert", "voice": "bm_george", "heard": "is robert still at work"}
+{"text": "has bob called", "expect": "topic-robert", "voice": "af_heart", "heard": "has bob called"}
+{"text": "has bob called", "expect": "topic-robert", "voice": "bf_emma", "heard": "it has been cold"}
+{"text": "has bob called", "expect": "topic-robert", "voice": "am_michael", "heard": "has bob cold"}
+{"text": "has bob called", "expect": "topic-robert", "voice": "bm_george", "heard": "has been the cold"}
+{"text": "i want to see robert now", "expect": "topic-robert", "voice": "af_heart", "heard": "i want to see robert now"}
+{"text": "i want to see robert now", "expect": "topic-robert", "voice": "bf_emma", "heard": "i want to see robert now"}
+{"text": "i want to see robert now", "expect": "topic-robert", "voice": "am_michael", "heard": "i want to see robert now"}
+{"text": "i want to see robert now", "expect": "topic-robert", "voice": "bm_george", "heard": "i want to see robert now"}
+{"text": "has biscuit had his dinner", "expect": "topic-biscuit", "voice": "af_heart", "heard": "has biscuit had his dinner"}
+{"text": "has biscuit had his dinner", "expect": "topic-biscuit", "voice": "bf_emma", "heard": "has biscuit had his dinner"}
+{"text": "has biscuit had his dinner", "expect": "topic-biscuit", "voice": "am_michael", "heard": "has biscuit had his dinner"}
+{"text": "has biscuit had his dinner", "expect": "topic-biscuit", "voice": "bm_george", "heard": "as bizkit had his demo"}
+{"text": "where's the dog", "expect": "topic-biscuit", "voice": "af_heart", "heard": "where's the dog"}
+{"text": "where's the dog", "expect": "topic-biscuit", "voice": "bf_emma", "heard": "where's the dog"}
+{"text": "where's the dog", "expect": "topic-biscuit", "voice": "am_michael", "heard": "where's the dog"}
+{"text": "where's the dog", "expect": "topic-biscuit", "voice": "bm_george", "heard": "where's the dog"}
+{"text": "did anyone feed the dog", "expect": "topic-biscuit", "voice": "af_heart", "heard": "did anyone feed the dog"}
+{"text": "did anyone feed the dog", "expect": "topic-biscuit", "voice": "bf_emma", "heard": "did anyone feed the dog"}
+{"text": "did anyone feed the dog", "expect": "topic-biscuit", "voice": "am_michael", "heard": "did anyone feed the dog"}
+{"text": "did anyone feed the dog", "expect": "topic-biscuit", "voice": "bm_george", "heard": "did anyone feed the dog"}
+{"text": "has somebody taken my purse", "expect": "topic-purse", "voice": "af_heart", "heard": "has somebody taken my purse"}
+{"text": "has somebody taken my purse", "expect": "topic-purse", "voice": "bf_emma", "heard": "as somebody taken my purse"}
+{"text": "has somebody taken my purse", "expect": "topic-purse", "voice": "am_michael", "heard": "as somebody taken my purse"}
+{"text": "has somebody taken my purse", "expect": "topic-purse", "voice": "bm_george", "heard": "has somebody taken my purse"}
+{"text": "where did my purse go", "expect": "topic-purse", "voice": "af_heart", "heard": "where did my purse go"}
+{"text": "where did my purse go", "expect": "topic-purse", "voice": "bf_emma", "heard": "where did my purse go"}
+{"text": "where did my purse go", "expect": "topic-purse", "voice": "am_michael", "heard": "where did my purse go"}
+{"text": "where did my purse go", "expect": "topic-purse", "voice": "bm_george", "heard": "where did my purse go"}
+{"text": "who's paying the bills", "expect": "topic-bills", "voice": "af_heart", "heard": "who's paying the bills"}
+{"text": "who's paying the bills", "expect": "topic-bills", "voice": "bf_emma", "heard": "who's paying the bills"}
+{"text": "who's paying the bills", "expect": "topic-bills", "voice": "am_michael", "heard": "who's paying the bills"}
+{"text": "who's paying the bills", "expect": "topic-bills", "voice": "bm_george", "heard": "who's paying the bills"}
+{"text": "have the bills been paid", "expect": "topic-bills", "voice": "af_heart", "heard": "have the bills been paid"}
+{"text": "have the bills been paid", "expect": "topic-bills", "voice": "bf_emma", "heard": "have the bills been paid"}
+{"text": "have the bills been paid", "expect": "topic-bills", "voice": "am_michael", "heard": "have the bills been paid"}
+{"text": "have the bills been paid", "expect": "topic-bills", "voice": "bm_george", "heard": "have the bills been paid"}
+{"text": "where are my slippers", "expect": null, "voice": "af_heart", "heard": "where are my slippers"}
+{"text": "where are my slippers", "expect": null, "voice": "bf_emma", "heard": "where are my slippers"}
+{"text": "where are my slippers", "expect": null, "voice": "am_michael", "heard": "where are my slippers"}
+{"text": "where are my slippers", "expect": null, "voice": "bm_george", "heard": "where are my slippers"}
+{"text": "is it going to snow", "expect": null, "voice": "af_heart", "heard": "is it going to snow"}
+{"text": "is it going to snow", "expect": null, "voice": "bf_emma", "heard": "is it going to snow"}
+{"text": "is it going to snow", "expect": null, "voice": "am_michael", "heard": "is it going to snow"}
+{"text": "is it going to snow", "expect": null, "voice": "bm_george", "heard": "is it going to snow"}
+{"text": "what's that noise", "expect": null, "voice": "af_heart", "heard": "what's that noise"}
+{"text": "what's that noise", "expect": null, "voice": "bf_emma", "heard": "what's that noise"}
+{"text": "what's that noise", "expect": null, "voice": "am_michael", "heard": "what's that noise"}
+{"text": "what's that noise", "expect": null, "voice": "bm_george", "heard": "what's that noise"}
+{"text": "where is my father", "expect": null, "voice": "af_heart", "heard": "where is my father"}
+{"text": "where is my father", "expect": null, "voice": "bf_emma", "heard": "where is my father it"}
+{"text": "where is my father", "expect": null, "voice": "am_michael", "heard": "where is my father"}
+{"text": "where is my father", "expect": null, "voice": "bm_george", "heard": "where is my father"}
+{"text": "when is my brother coming", "expect": null, "voice": "af_heart", "heard": "when is my brother coming"}
+{"text": "when is my brother coming", "expect": null, "voice": "bf_emma", "heard": "when is my brother cummings"}
+{"text": "when is my brother coming", "expect": null, "voice": "am_michael", "heard": "when is my brother coming"}
+{"text": "when is my brother coming", "expect": null, "voice": "bm_george", "heard": "when is my brother coming"}
+{"text": "is he coming", "expect": null, "voice": "af_heart", "heard": "is he coming"}
+{"text": "is he coming", "expect": null, "voice": "bf_emma", "heard": "is he coming"}
+{"text": "is he coming", "expect": null, "voice": "am_michael", "heard": "is he coming"}
+{"text": "is he coming", "expect": null, "voice": "bm_george", "heard": "is he coming"}
+{"text": "where did she go", "expect": null, "voice": "af_heart", "heard": "where did she go"}
+{"text": "where did she go", "expect": null, "voice": "bf_emma", "heard": "where did she go"}
+{"text": "where did she go", "expect": null, "voice": "am_michael", "heard": "where did she go"}
+{"text": "where did she go", "expect": null, "voice": "bm_george", "heard": "where did she go"}
+{"text": "who are you", "expect": null, "voice": "af_heart", "heard": "who are you"}
+{"text": "who are you", "expect": null, "voice": "bf_emma", "heard": "the who are you"}
+{"text": "who are you", "expect": null, "voice": "am_michael", "heard": "who are you"}
+{"text": "who are you", "expect": null, "voice": "bm_george", "heard": "who are use"}
+{"text": "what's this programme", "expect": null, "voice": "af_heart", "heard": "what's this program"}
+{"text": "what's this programme", "expect": null, "voice": "bf_emma", "heard": "what's this program"}
+{"text": "what's this programme", "expect": null, "voice": "am_michael", "heard": "what's this program"}
+{"text": "what's this programme", "expect": null, "voice": "bm_george", "heard": "what's this program"}
+{"text": "can i have a cup of tea", "expect": null, "voice": "af_heart", "heard": "can i have a cup of tea"}
+{"text": "can i have a cup of tea", "expect": null, "voice": "bf_emma", "heard": "you can i have a cup of tea"}
+{"text": "can i have a cup of tea", "expect": null, "voice": "am_michael", "heard": "can i have a cup of tea"}
+{"text": "can i have a cup of tea", "expect": null, "voice": "bm_george", "heard": "can i have a cup of tea"}
+{"text": "where's the bathroom", "expect": null, "voice": "af_heart", "heard": "where's the bathroom"}
+{"text": "where's the bathroom", "expect": null, "voice": "bf_emma", "heard": "where's the bathroom"}
+{"text": "where's the bathroom", "expect": null, "voice": "am_michael", "heard": "where's the bathroom"}
+{"text": "where's the bathroom", "expect": null, "voice": "bm_george", "heard": "where's the bathroom"}
+{"text": "is the oven on", "expect": null, "voice": "af_heart", "heard": "is the oven on"}
+{"text": "is the oven on", "expect": null, "voice": "bf_emma", "heard": "is the oven an aunt"}
+{"text": "is the oven on", "expect": null, "voice": "am_michael", "heard": "is the oven on"}
+{"text": "is the oven on", "expect": null, "voice": "bm_george", "heard": "is the oven on"}
+{"text": "did i lock the door", "expect": null, "voice": "af_heart", "heard": "did i lock the door"}
+{"text": "did i lock the door", "expect": null, "voice": "bf_emma", "heard": "did i lock the doors"}
+{"text": "did i lock the door", "expect": null, "voice": "am_michael", "heard": "did i locked the door"}
+{"text": "did i lock the door", "expect": null, "voice": "bm_george", "heard": "did i lock the door"}
+{"text": "where are my teeth", "expect": null, "voice": "af_heart", "heard": "where are my teeth"}
+{"text": "where are my teeth", "expect": null, "voice": "bf_emma", "heard": "where are my teeth"}
+{"text": "where are my teeth", "expect": null, "voice": "am_michael", "heard": "where are my teeth"}
+{"text": "where are my teeth", "expect": null, "voice": "bm_george", "heard": "where are my teeth"}
+{"text": "what year was i born", "expect": null, "voice": "af_heart", "heard": "what year was i born"}
+{"text": "what year was i born", "expect": null, "voice": "bf_emma", "heard": "what year was i born"}
+{"text": "what year was i born", "expect": null, "voice": "am_michael", "heard": "what year was i born"}
+{"text": "what year was i born", "expect": null, "voice": "bm_george", "heard": "what year was i born"}
+{"text": "sarah looks tired", "expect": null, "voice": "af_heart", "heard": "sarah looks tired"}
+{"text": "sarah looks tired", "expect": null, "voice": "bf_emma", "heard": "sarah looks tired"}
+{"text": "sarah looks tired", "expect": null, "voice": "am_michael", "heard": "sarah looks tired"}
+{"text": "sarah looks tired", "expect": null, "voice": "bm_george", "heard": "zero looks tired"}
+{"text": "robert fixed that chair", "expect": null, "voice": "af_heart", "heard": "robert fix that chair"}
+{"text": "robert fixed that chair", "expect": null, "voice": "bf_emma", "heard": "robert fix that chair"}
+{"text": "robert fixed that chair", "expect": null, "voice": "am_michael", "heard": "robert fix that chair"}
+{"text": "robert fixed that chair", "expect": null, "voice": "bm_george", "heard": "robert fixed that chair"}
+{"text": "the dog's asleep", "expect": null, "voice": "af_heart", "heard": "the dogs asleep"}
+{"text": "the dog's asleep", "expect": null, "voice": "bf_emma", "heard": "the dogs asleep"}
+{"text": "the dog's asleep", "expect": null, "voice": "am_michael", "heard": "the dogs asleep"}
+{"text": "the dog's asleep", "expect": null, "voice": "bm_george", "heard": "the dogs asleep"}
+{"text": "my purse is in the kitchen", "expect": null, "voice": "af_heart", "heard": "my purse is in the kitchen"}
+{"text": "my purse is in the kitchen", "expect": null, "voice": "bf_emma", "heard": "my purse is in the kitchen"}
+{"text": "my purse is in the kitchen", "expect": null, "voice": "am_michael", "heard": "my purse is in the kitchen"}
+{"text": "my purse is in the kitchen", "expect": null, "voice": "bm_george", "heard": "my purse is in the kitchen"}
+{"text": "dinner smells good", "expect": null, "voice": "af_heart", "heard": "dinner smells good"}
+{"text": "dinner smells good", "expect": null, "voice": "bf_emma", "heard": "dinner smells good"}
+{"text": "dinner smells good", "expect": null, "voice": "am_michael", "heard": "dinner smells good"}
+{"text": "dinner smells good", "expect": null, "voice": "bm_george", "heard": "dinner smells good he"}
+{"text": "that man on the television", "expect": null, "voice": "af_heart", "heard": "that man on the television"}
+{"text": "that man on the television", "expect": null, "voice": "bf_emma", "heard": "that man on the televisions"}
+{"text": "that man on the television", "expect": null, "voice": "am_michael", "heard": "that man on the television"}
+{"text": "that man on the television", "expect": null, "voice": "bm_george", "heard": "that man on the television"}
+{"text": "and the winner is", "expect": null, "voice": "af_heart", "heard": "and the winner is"}
+{"text": "and the winner is", "expect": null, "voice": "bf_emma", "heard": "and the winner is"}
+{"text": "and the winner is", "expect": null, "voice": "am_michael", "heard": "and the winner is"}
+{"text": "and the winner is", "expect": null, "voice": "bm_george", "heard": "and the winner is"}
+{"text": "thank you very much", "expect": null, "voice": "af_heart", "heard": "thank you very much"}
+{"text": "thank you very much", "expect": null, "voice": "bf_emma", "heard": "thank you very much"}
+{"text": "thank you very much", "expect": null, "voice": "am_michael", "heard": "thank you very much"}
+{"text": "thank you very much", "expect": null, "voice": "bm_george", "heard": "thank you very much"}
+{"text": "we'll see", "expect": null, "voice": "af_heart", "heard": "we'll see"}
+{"text": "we'll see", "expect": null, "voice": "bf_emma", "heard": "we'll see"}
+{"text": "we'll see", "expect": null, "voice": "am_michael", "heard": "we'll see"}
+{"text": "we'll see", "expect": null, "voice": "bm_george", "heard": "we'll see"}
+{"text": "i'm going to have a nap", "expect": null, "voice": "af_heart", "heard": "i'm going to have a nap"}
+{"text": "i'm going to have a nap", "expect": null, "voice": "bf_emma", "heard": "i'm going to have a nap"}
+{"text": "i'm going to have a nap", "expect": null, "voice": "am_michael", "heard": "i'm going to have a nap"}
+{"text": "i'm going to have a nap", "expect": null, "voice": "bm_george", "heard": "i'm going to have a naps"}
+{"text": "look at the birds", "expect": null, "voice": "af_heart", "heard": "look at the birds"}
+{"text": "look at the birds", "expect": null, "voice": "bf_emma", "heard": "look at the birds"}
+{"text": "look at the birds", "expect": null, "voice": "am_michael", "heard": "look at the birds"}
+{"text": "look at the birds", "expect": null, "voice": "bm_george", "heard": "look at the birds"}
+{"text": "coming up next on the show", "expect": null, "voice": "af_heart", "heard": "coming up next on the show"}
+{"text": "coming up next on the show", "expect": null, "voice": "bf_emma", "heard": "coming up next on the show"}
+{"text": "coming up next on the show", "expect": null, "voice": "am_michael", "heard": "coming up next on the show"}
+{"text": "coming up next on the show", "expect": null, "voice": "bm_george", "heard": "coming up next on the show"}
+{"text": "the stock market fell today", "expect": null, "voice": "af_heart", "heard": "the stock market fell today"}
+{"text": "the stock market fell today", "expect": null, "voice": "bf_emma", "heard": "the stock market fell today"}
+{"text": "the stock market fell today", "expect": null, "voice": "am_michael", "heard": "the stock market fell today"}
+{"text": "the stock market fell today", "expect": null, "voice": "bm_george", "heard": "the stock market fell today"}
+{"text": "i love this film", "expect": null, "voice": "af_heart", "heard": "i love this film"}
+{"text": "i love this film", "expect": null, "voice": "bf_emma", "heard": "i love this film"}
+{"text": "i love this film", "expect": null, "voice": "am_michael", "heard": "i love this film"}
+{"text": "i love this film", "expect": null, "voice": "bm_george", "heard": "i love this film"}
+{"text": "oh no", "expect": null, "voice": "af_heart", "heard": "oh now"}
+{"text": "oh no", "expect": null, "voice": "bf_emma", "heard": "oh no"}
+{"text": "oh no", "expect": null, "voice": "am_michael", "heard": "oh no"}
+{"text": "oh no", "expect": null, "voice": "bm_george", "heard": "oh no"}

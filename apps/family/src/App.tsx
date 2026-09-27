@@ -93,6 +93,7 @@ function useOverview(api: Api) {
 function Signed({ api, onSignOut }: { api: Api; onSignOut: () => void }) {
   const { o, error, refresh } = useOverview(api);
   const [tab, setTab] = useState<Tab>((location.hash.slice(1) as Tab) || "home");
+  const [prefill, setPrefill] = useState<string>();
   useEffect(() => {
     location.hash = tab;
     window.scrollTo(0, 0);
@@ -116,7 +117,11 @@ function Signed({ api, onSignOut }: { api: Api; onSignOut: () => void }) {
     }
     await refresh();
   };
-  const props = { o, api, act, go: setTab };
+  const answerFor = (question: string) => {
+    setPrefill(question);
+    setTab("answers");
+  };
+  const props = { o, api, act, go: setTab, answerFor };
   const pendingCount = o.pending.topics.length + o.pending.moments.length + o.pending.messages.length;
   const openAlerts = o.alerts.filter((a) => !a.acknowledgedAt && a.urgency !== "info").length;
   return (
@@ -131,7 +136,7 @@ function Signed({ api, onSignOut }: { api: Api; onSignOut: () => void }) {
       <main className="content">
         {tab === "home" && <Home {...props} />}
         {tab === "plan" && <Plan {...props} />}
-        {tab === "answers" && <Answers {...props} />}
+        {tab === "answers" && <Answers {...props} prefill={prefill} onPrefillUsed={() => setPrefill(undefined)} />}
         {tab === "moments" && <Moments {...props} />}
         {tab === "messages" && <Messages {...props} />}
         {tab === "digest" && <DigestView {...props} />}
@@ -149,7 +154,13 @@ function Signed({ api, onSignOut }: { api: Api; onSignOut: () => void }) {
   );
 }
 
-type Props = { o: Overview; api: Api; act: (fn: () => Promise<unknown>) => Promise<void>; go: (t: Tab) => void };
+type Props = {
+  o: Overview;
+  api: Api;
+  act: (fn: () => Promise<unknown>) => Promise<void>;
+  go: (t: Tab) => void;
+  answerFor: (question: string) => void;
+};
 
 function clock(iso: string, tz: string) {
   return new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "numeric", minute: "2-digit" }).format(new Date(iso));
@@ -170,7 +181,7 @@ function Card({ title, children, tone }: { title?: ReactNode; children: ReactNod
 
 // ------------------------------------------------------------------ Home
 
-function Home({ o, api, act, go }: Props) {
+function Home({ o, api, act, answerFor }: Props) {
   const tz = o.household.settings.timezone;
   const person = o.household.person.name;
   const primary = o.me.role === "primary";
@@ -225,7 +236,7 @@ function Home({ o, api, act, go }: Props) {
                   {u.count} time{u.count === 1 ? "" : "s"} this week, last {dayLabel(u.last, tz)} {clock(u.last, tz)}
                 </div>
               </div>
-              <button onClick={() => go("answers")}>Add an answer</button>
+              <button onClick={() => answerFor(u.text)}>Add an answer</button>
             </div>
           ))}
         </Card>
@@ -408,8 +419,13 @@ function Plan({ o, api, act }: Props) {
 
 const POLICY_LABEL: Record<TruthPolicy, string> = { tell: "Tell", redirect: "Redirect", comfort: "Comfort" };
 
-function Answers({ o, api, act }: Props) {
-  const [editing, setEditing] = useState<Partial<Topic> | undefined>();
+function Answers({ o, api, act, prefill, onPrefillUsed }: Props & { prefill?: string | undefined; onPrefillUsed: () => void }) {
+  const [editing, setEditing] = useState<Partial<Topic> | undefined>(
+    prefill ? { policy: "tell", phrasings: [prefill.toLowerCase().replace(/[?.!]/g, "")], answer: "", label: "" } : undefined,
+  );
+  useEffect(() => {
+    if (prefill) onPrefillUsed();
+  }, []);
   const [guidance, setGuidance] = useState<Guidance[]>([]);
   useEffect(() => void api.guidance().then(setGuidance), [api]);
   const family = o.household.topics.filter((t) => !t.builtin);

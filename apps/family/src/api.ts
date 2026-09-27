@@ -33,7 +33,7 @@ export function savedToken(): string | undefined {
   const fromUrl = new URLSearchParams(location.search).get("token");
   if (fromUrl) {
     localStorage.setItem(TOKEN_KEY, fromUrl);
-    history.replaceState(null, "", location.pathname);
+    history.replaceState(null, "", location.pathname + location.hash);
     return fromUrl;
   }
   return localStorage.getItem(TOKEN_KEY) ?? undefined;
