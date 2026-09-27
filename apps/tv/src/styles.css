@@ -1,0 +1,556 @@
+/*
+ * Mantel on the TV.
+ * Read from across a room by someone whose eyesight and attention are not what
+ * they were: very large type, one idea per screen, high contrast without glare,
+ * nothing that flashes, and every change a slow fade.
+ */
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("./fonts/atkinson-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("./fonts/atkinson-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: block;
+}
+
+:root {
+  --ink: #f7f1e6;
+  --ink-soft: rgba(247, 241, 230, 0.72);
+  --ink-faint: rgba(247, 241, 230, 0.45);
+  --accent: #f2b56b;
+  --panel: rgba(255, 255, 255, 0.07);
+  --panel-edge: rgba(255, 255, 255, 0.12);
+  --bg-top: #1c2735;
+  --bg-bottom: #131a24;
+  --sky: #7fb2e0;
+  --fade: 900ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #0d1118;
+}
+
+body {
+  font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+.screen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+  transition: background var(--fade) ease;
+}
+
+/* The sky band: a wide, soft light behind the day name that follows the real sky. */
+.screen::before {
+  content: "";
+  position: absolute;
+  left: -20vw;
+  top: -40vh;
+  width: 95vw;
+  height: 95vh;
+  background: radial-gradient(closest-side, var(--sky), transparent);
+  opacity: 0.42;
+  transition: background 60s linear, opacity var(--fade);
+  pointer-events: none;
+}
+
+.screen.evening {
+  --bg-top: #2b1f26;
+  --bg-bottom: #1a1318;
+  --accent: #eda673;
+}
+.screen.evening::before {
+  opacity: 0.3;
+}
+
+.screen.night {
+  --bg-top: #050507;
+  --bg-bottom: #050507;
+  --ink: #9b8263;
+}
+.screen.night::before {
+  opacity: 0;
+}
+
+.screen > * {
+  animation: fade-in var(--fade) ease both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen > * {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------- Today */
+
+.today {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 54% 46%;
+  grid-template-rows: 1fr auto;
+  padding: 6vh 5vw 5vh 6vw;
+}
+
+.when {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1;
+}
+
+.greeting {
+  font-size: 3.1vw;
+  color: var(--ink-soft);
+  margin-bottom: 2.4vh;
+}
+
+.dayname {
+  font-size: 12.5vw;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+
+.part {
+  font-size: 5.6vw;
+  color: var(--accent);
+  margin-top: 1.4vh;
+}
+
+.date {
+  font-size: 4.6vw;
+  margin-top: 2.2vh;
+}
+
+/* Atkinson Hyperlegible slashes its zero; a clock face reads better with a plain one. */
+.clock,
+.rest-clock,
+.night-clock,
+.night-clock-small {
+  font-family: Roboto, "Segoe UI", Arial, sans-serif;
+}
+
+.clock {
+  font-size: 4.2vw;
+  color: var(--ink-soft);
+  margin-top: 2.2vh;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3.5vh;
+  min-width: 0;
+}
+
+.next {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 2.2vw;
+  padding: 3.2vh 2.4vw;
+}
+
+.next .label {
+  font-size: 2vw;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 1.6vh;
+}
+
+.next-row {
+  display: flex;
+  align-items: center;
+  gap: 1.8vw;
+}
+
+.next-line {
+  font-size: 3.4vw;
+  line-height: 1.18;
+  font-weight: 700;
+}
+
+.next.soon {
+  border-color: var(--accent);
+  background: rgba(242, 181, 107, 0.12);
+}
+
+.next.soon .next-line {
+  font-size: 4vw;
+}
+
+.next.quiet .next-line {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.later {
+  font-size: 2.2vw;
+  color: var(--ink-soft);
+  margin-top: 2vh;
+}
+
+.portrait {
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+  border: 0.3vw solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0.6vw 2vw rgba(0, 0, 0, 0.35);
+}
+.portrait.sm {
+  width: 5vw;
+  height: 5vw;
+}
+.portrait.md {
+  width: 8vw;
+  height: 8vw;
+}
+.portrait.lg {
+  width: 12vw;
+  height: 12vw;
+}
+
+.moment {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4vh;
+  animation: fade-in 1600ms ease both;
+}
+
+.moment img {
+  width: 100%;
+  height: 34vh;
+  object-fit: cover;
+  border-radius: 1.8vw;
+  box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.4);
+}
+
+.moment figcaption {
+  font-size: 2.3vw;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.moment .hint {
+  color: var(--ink-faint);
+  font-size: 1.7vw;
+}
+
+.done {
+  grid-column: 1 / -1;
+  font-size: 2.2vw;
+  color: var(--ink-soft);
+  padding-top: 2vh;
+  border-top: 1px solid var(--panel-edge);
+}
+
+.today.highlight .when,
+.today.highlight .next {
+  animation: glow 2.4s ease;
+}
+
+@keyframes glow {
+  0% {
+    filter: brightness(1);
+  }
+  30% {
+    filter: brightness(1.25);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* ---------------------------------------------------------------- Answers */
+
+.answer,
+.message,
+.story,
+.door {
+  position: absolute;
+  inset: 0;
+  padding: 7vh 6vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.heard {
+  font-size: 2.4vw;
+  color: var(--ink-faint);
+  margin-bottom: 4vh;
+}
+
+.answer-body {
+  display: flex;
+  align-items: center;
+  gap: 4vw;
+}
+
+.answer-photo {
+  width: 30vw;
+  height: 44vh;
+  object-fit: cover;
+  border-radius: 2vw;
+  box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.45);
+  flex: none;
+}
+
+.answer-text {
+  font-size: 5vw;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.attribution {
+  margin-top: 5vh;
+  font-size: 2vw;
+  color: var(--ink-faint);
+}
+
+/* ---------------------------------------------------------------- Door */
+
+.door {
+  background: linear-gradient(180deg, #202a38, #151c26);
+}
+
+.door-label,
+.message-label {
+  font-size: 2.2vw;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin-bottom: 4vh;
+}
+
+.door-body {
+  display: grid;
+  grid-template-columns: 44vw 1fr;
+  gap: 4vw;
+  align-items: center;
+}
+
+.door-snapshot img,
+.door-waiting {
+  width: 44vw;
+  height: 56vh;
+  object-fit: cover;
+  border-radius: 2vw;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.45);
+}
+
+.door-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+}
+
+.door-first {
+  font-size: 4.8vw;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.door-line {
+  font-size: 3.4vw;
+  line-height: 1.25;
+}
+
+.door.unexpected .door-line:nth-child(2) {
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------------- Message and story */
+
+.message-body {
+  display: flex;
+  align-items: center;
+  gap: 4vw;
+}
+
+.message-text {
+  font-size: 4.2vw;
+  line-height: 1.25;
+}
+
+.story {
+  flex-direction: row;
+  align-items: center;
+  gap: 4vw;
+}
+
+.story img {
+  width: 48vw;
+  height: 70vh;
+  object-fit: cover;
+  border-radius: 2vw;
+  box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.45);
+}
+
+.story-caption {
+  font-size: 2.6vw;
+  color: var(--accent);
+  margin-bottom: 3vh;
+}
+
+.story-words {
+  font-size: 3.6vw;
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------------------------- Night and rest */
+
+.night {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.6vh;
+  color: #a88c68;
+}
+
+.night-first {
+  font-size: 5.4vw;
+  font-weight: 700;
+}
+
+.night-clock {
+  font-size: 4vw;
+  opacity: 0.8;
+}
+
+.night-line {
+  font-size: 3.6vw;
+}
+
+.night-empty,
+.rest {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 20s ease;
+}
+
+.night-clock-small {
+  font-size: 2.2vw;
+  color: rgba(155, 130, 99, 0.35);
+}
+
+.rest-day {
+  font-size: 4vw;
+  color: var(--ink-soft);
+}
+
+.rest-clock {
+  font-size: 7vw;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------- Chrome */
+
+.status {
+  position: absolute;
+  right: 2vw;
+  bottom: 2vh;
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  font-size: 1.2vw;
+  color: var(--ink-faint);
+}
+
+.dot {
+  width: 0.8vw;
+  height: 0.8vw;
+  border-radius: 50%;
+  background: #7fd18b;
+  opacity: 0.8;
+}
+
+.loading,
+.unpaired-box {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.loading,
+.brand {
+  font-size: 5vw;
+  color: var(--ink-soft);
+}
+
+.unpaired-box p {
+  font-size: 2.6vw;
+  max-width: 60vw;
+}
+
+.unpaired-box .small {
+  font-size: 1.8vw;
+  color: var(--ink-soft);
+}
+
+.dev {
+  position: absolute;
+  left: 1vw;
+  bottom: 1vh;
+  display: flex;
+  gap: 0.6vw;
+  font-size: 13px;
+  opacity: 0.35;
+  cursor: auto;
+}
+
+.dev:hover,
+.dev:focus-within {
+  opacity: 1;
+}
+
+.dev input {
+  width: 22vw;
+  font: inherit;
+  padding: 4px 8px;
+}

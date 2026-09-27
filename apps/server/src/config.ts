@@ -34,7 +34,7 @@ export interface Config {
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
-  const port = Number(env.PORT ?? 8790);
+  const port = Number(env.PORT ?? 8795);
   const demo = env.MANTEL_DEMO !== "0";
   return {
     port,

@@ -130,6 +130,19 @@ export function createApp(mantel: Mantel, opts: AppOptions = {}) {
   const defer = opts.defer ?? ((w) => void w().catch(() => undefined));
   app.disable("x-powered-by");
 
+  // The Fire TV app loads its interface from the APK's own asset origin, so the
+  // TV routes answer cross-origin requests. They are bearer-token or key protected.
+  app.use(["/api/tv", "/media"], (req, res, next) => {
+    res.set("access-control-allow-origin", "*");
+    res.set("access-control-allow-headers", "authorization, content-type");
+    res.set("access-control-allow-methods", "GET, POST, OPTIONS");
+    if (req.method === "OPTIONS") {
+      res.status(204).end();
+      return;
+    }
+    next();
+  });
+
   // Ring's signature covers the raw bytes, so this route reads them before any JSON parser.
   app.post("/ring/webhook", express.raw({ type: "*/*", limit: "1mb" }), async (req, res) => {
     const out = await mantel.ringWebhook(req.body as Buffer, req.header("x-signature"));
