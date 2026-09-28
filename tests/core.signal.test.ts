@@ -85,7 +85,17 @@ describe("Change Signal", () => {
     expect(a.body).toMatch(/Asked 45 questions \(usually about 12\)/);
     expect(a.body).toMatch(/Up for 150 minutes during the night/);
     expect(a.body).toMatch(/Consider calling Margaret's doctor/);
+    expect(a.title).toBe("Margaret: a sudden change on Sunday, June 21");
     expect(a.body).not.toMatch(/delirium|diagnos|dementia/i);
+  });
+
+  it("says a late morning in clock times", () => {
+    const { h } = household();
+    const days = flat(20);
+    days.push({ date: "2026-06-21", questions: 45, nightMinutes: 150, nightDoorOpens: 0, firstSeen: 120 });
+    const a = changeAlert(h, runSignal(days).at(-1)!, new Date());
+    expect(a.body).toMatch(/First seen at \d{1,2}:\d{2} am \(usually about \d{1,2}:\d{2} am\)/);
+    expect(a.body).not.toMatch(/usually -/);
   });
 });
 

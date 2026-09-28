@@ -23,7 +23,7 @@
  */
 
 import type { Alert, Household, MantelEvent } from "./model";
-import { addDays, clockFace, parseClock, zonedInstant } from "./time";
+import { WEEKDAYS, addDays, clockFace, clockWithPeriod, longDate, parseClock, weekdayOf, zonedInstant } from "./time";
 
 export const SERIES = ["questions", "nightMinutes", "nightDoorOpens", "firstSeen"] as const;
 export type Series = (typeof SERIES)[number];
@@ -157,7 +157,7 @@ export function runSignal(history: DayFeatures[], rule: SignalRule = "mantel"): 
   return out;
 }
 
-function describe(r: SeriesReading): string {
+function describe(h: Household, r: SeriesReading): string {
   const usual = r.baseline.median;
   switch (r.series) {
     case "questions":
@@ -166,9 +166,17 @@ function describe(r: SeriesReading): string {
       return `Up for ${Math.round(r.value)} minutes during the night (usually ${Math.round(usual)}).`;
     case "nightDoorOpens":
       return `An outside door opened ${r.value} time${r.value === 1 ? "" : "s"} during the night.`;
-    case "firstSeen":
-      return `First seen ${Math.abs(Math.round(r.value))} minutes ${r.value >= 0 ? "after" : "before"} the usual waking time (usually ${Math.round(usual)}).`;
+    case "firstSeen": {
+      // The series is minutes from the planned wake time; the family reads clock times.
+      const at = (offset: number) => clockWithPeriod(parseClock(h.settings.wake) + Math.round(offset));
+      return `First seen at ${at(r.value)} (usually about ${at(usual)}).`;
+    }
   }
+}
+
+/** "Sunday, September 27", as the family reads a day. */
+function dayName(date: string): string {
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) ? `${WEEKDAYS[weekdayOf(date)]}, ${longDate(date)}` : date;
 }
 
 export function changeAlert(h: Household, decision: SignalDecision, at: Date): Alert {
@@ -178,9 +186,9 @@ export function changeAlert(h: Household, decision: SignalDecision, at: Date): A
     at: at.toISOString(),
     kind: "change",
     urgency: "attention",
-    title: `${h.person.name}: a sudden change on ${decision.date}`,
+    title: `${h.person.name}: a sudden change on ${dayName(decision.date)}`,
     body: [
-      ...flagged.map(describe),
+      ...flagged.map((r) => describe(h, r)),
       `A sudden change can have a medical cause, such as an infection. Consider calling ${h.person.name}'s doctor.`,
     ].join(" "),
   };
