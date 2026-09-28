@@ -11,21 +11,29 @@ Every tool, API and SDK Mantel uses, what it was used for, what worked, what nee
 **What worked well.** Fire OS behaves like Android, so the AndroidX stack (WebView asset loader, CameraX) applies unchanged, and a web interface inside a WebView made the 10-foot UI fast to iterate in a desktop browser and identical on the TV. The Cube's UVC webcam support, made for video calling, is exactly the hardware a presence feature needs.
 
 **What needs work.**
-- Vega tooling on Windows, and an emulator for Fire OS: friction log 1 and 2.
+- An emulator for Fire OS: friction log 2.
 - Developer documentation for external cameras on the Cube: friction log 3.
 - A care or assisted-living mode, and an app-level speech API: friction log 4 and 5. For accessibility apps these are the difference between a demo and a product a family can install.
 
-**Onboarding.** The first build ran on the Android TV emulator after two fixes, both about the WebView: the asset loader strips its path prefix before looking up a file, and a page served from the APK's https origin needs mixed content allowed to reach a household server on plain http. Most of the setup effort went into deciding between Vega and Fire OS on Windows.
+**Onboarding.** The first build ran on the Android TV emulator after two fixes, both about the WebView: the asset loader strips its path prefix before looking up a file, and a page served from the APK's https origin needs mixed content allowed to reach a household server on plain http. Most of the setup effort went into deciding between Vega and Fire OS on Windows, before Vega turned out to run under WSL 2.
 
 **Would I build with it again?** Yes. The TV is the screen older people face most, and Fire TV reaches it with a normal Android toolchain. A care mode would make it the obvious platform for this category.
 
-## Vega OS (documentation)
+## Vega OS (Vega SDK 0.24, React Native for Vega, Vega Virtual Device)
 
-**Used for:** reading. The Vega API overview, the Vega developer guide and the forum answered the platform questions (speech recognition, hardware access) that decided the Fire OS path.
+**Used for:** the Vega version of the TV (`vega/`, [VEGA.md](VEGA.md)): a React Native app with the same screens as the Fire OS interface, importing the same TypeScript core; `@amazon-devices/react-native-w3cmedia` (`AudioPlayer` and `MediaSource`) for recordings and the household voice; AsyncStorage for the offline cache; `useTVEventHandler` and `BackHandler` for the remote; the Vega Virtual Device, under WSL 2, to run it and to film the demo; `loggingctl` and `inputd-cli` on the device. The API overview and the forum also answered the platform questions (speech recognition, hardware access).
 
-**What worked well.** The forum answered directly and quickly, with an Amazon engineer stating what the platform does not expose, which is the answer a developer needs to plan.
+**What worked well.** The first native build, a one-screen probe of time zones, the network, images and audio, compiled and ran on the virtual device from the template; importing the core from outside the project took two lines of Metro configuration. The shared core ran unchanged under React Native for Vega, including `Intl` time zones, which every rule in Mantel depends on. `fetch` honoured the manifest's cleartext allowlist, so the TV reached a household server on plain http. `MediaSource` accepted an MP4 built in JavaScript and played it. The forum answered directly, with an Amazon engineer stating what the platform does not expose, which is the answer a developer needs to plan.
 
-**What needs work.** Windows support for the Vega Developer Tools (friction log 1).
+**What needs work.**
+- Windows: the tools are unsupported there, and run under WSL 2 with three things to know (friction log 1).
+- The virtual device has no WebView, and says so only at install (friction log 7).
+- The media player opens https only, with an empty error message, and MSE claims MP3 support it does not have (friction log 8).
+- Scripting the remote, audio under WSL, the log buffer, and styles drawn differently from the web (friction log 9 to 11).
+
+**Onboarding.** Installing the SDK was one script. Most of the time went on the four points above, each found by probing on the device, because the error said less than the cause.
+
+**Would I build with it again?** Yes. React Native for Vega let the same core and the same screens run natively, and the virtual device made a TV testable without hardware. The WebView on the virtual device and cleartext media would have saved most of the work.
 
 ## Ring Partner API
 

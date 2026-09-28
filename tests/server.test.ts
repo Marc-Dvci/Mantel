@@ -96,6 +96,12 @@ describe("TV API", () => {
     expect(Date.now() - started).toBeLessThan(5000);
   });
 
+  it("carries demo input (a heard sentence, a presence change) to the TV", async () => {
+    const posted = await call("/api/dev/tv/input", { method: "POST", json: { heard: "What day is it?" } });
+    const { body } = await call("/api/tv/state", { token: "demo-tv" });
+    expect(body.devInput).toEqual({ id: posted.body.id, heard: "What day is it?" });
+  });
+
   it("marks a message played so it never plays twice", async () => {
     await call("/api/tv/events", { method: "POST", token: "demo-tv", json: { events: [{ type: "message.played", data: { id: "msg-morning" } }] } });
     const { body } = await call("/api/tv/state", { token: "demo-tv" });

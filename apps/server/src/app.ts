@@ -164,7 +164,8 @@ export function createApp(mantel: Mantel, opts: AppOptions = {}) {
         res.status(403).end();
         return;
       }
-      const obj = await media.get(req.params.hid, req.params.id);
+      // Media ids carry no extension; players that pick a decoder by extension may add one.
+      const obj = await media.get(req.params.hid, req.params.id.replace(/\.(mp3|m4a|wav|webm|ogg|jpg|jpeg|png)$/i, ""));
       if (!obj) {
         res.status(404).end();
         return;
@@ -568,6 +569,18 @@ export function createApp(mantel: Mantel, opts: AppOptions = {}) {
         if (!opts.sim) throw new HttpError(400, "No Ring simulator");
         const open = z.object({ open: z.boolean() }).parse(req.body).open;
         return opts.sim.contact(open, mantel.clock.now().getTime());
+      }),
+    );
+    d.post(
+      "/tv/input",
+      wrap(async (req) => {
+        const body = z.object({ heard: z.string().min(1).max(200).optional(), present: z.boolean().optional() }).parse(req.body);
+        const hid = await hidOf();
+        const devInput = { id: `dev-${Date.now().toString(36)}`, ...body };
+        await store.update(hid, (s) => {
+          s.devInput = devInput;
+        });
+        return devInput;
       }),
     );
     d.post(

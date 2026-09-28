@@ -1,6 +1,6 @@
 # Mantel
 
-**Mantel is a Fire TV app that turns the living-room TV into a patient memory for a person living with dementia. It answers the questions they ask all day in their family's own words, knows who is at the door, and tells the family when something changes.**
+**Mantel is a Fire TV app that turns the living-room TV into a patient memory for a person living with dementia. It answers the questions they ask all day in their family's own words, knows who is at the door, and tells the family when something changes.** It runs on Fire OS (a Kotlin app with on-device presence and speech) and on Vega OS (a React Native app).
 
 ![The Today screen on Fire TV](docs/img/tv-today.png)
 
@@ -32,7 +32,7 @@ With `pnpm dev` running:
 - ring the simulated doorbell: `curl -X POST localhost:8795/api/dev/ring/press -H "content-type: application/json" -d '{"visitor":"stranger"}'`
 - move the clock: `curl -X POST localhost:8795/api/dev/clock -H "content-type: application/json" -d '{"time":"03:10"}'`
 
-No AWS account, Ring account or API key is needed for any of this. [docs/FIRE_TV.md](docs/FIRE_TV.md) installs the app on a Fire TV.
+No AWS account, Ring account or API key is needed for any of this. [docs/FIRE_TV.md](docs/FIRE_TV.md) installs the app on a Fire TV with Fire OS; [docs/VEGA.md](docs/VEGA.md) builds the Vega OS app and runs it on the Vega Virtual Device.
 
 ```bash
 pnpm verify      # typecheck, tests, matcher evaluation, Change Signal benchmark (dev seeds)
@@ -61,6 +61,8 @@ Fire TV (Fire OS)                                   Mantel server (Node, local o
 
 The same TypeScript core (`packages/core`) runs on the TV, on the server and in the tests: the Today screen, the answer matcher, the door decision, the Change Signal and the digest. Camera frames and audio never leave the TV; the server receives events only. More in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+On Vega OS, `vega/` is a React Native app with the same screens and the same core, talking to the same server. Vega gives apps no camera and no speech recognition, so there the person is treated as present, the remote's OK reads the day, and a question reaches the TV only as words from a demo server; recordings play through Media Source Extensions after the app wraps their MP3 frames in MP4, because Vega's media player opens https only ([docs/VEGA.md](docs/VEGA.md)).
+
 ## Evidence
 
 | What | Result | Where |
@@ -71,7 +73,8 @@ The same TypeScript core (`packages/core`) runs on the TV, on the server and in 
 | Spoken: all three sets said by 4 voices and recognised by the TV's own Vosk model (1,056 utterances) | 81.4% to 89.2% right per set, **0 answered with the wrong topic** | [docs/EVAL.md](docs/EVAL.md) |
 | Change Signal, 40 held-out simulated households, each with a matched null | strong changes caught within 48 h: **70.0%**, at **0.148 false alerts per household-month**; alerting on questions alone: 52.5% at 0.780 | [docs/eval/signal_holdout_read_1.txt](docs/eval/signal_holdout_read_1.txt) |
 | Speech, end to end | in the Android TV API 30 emulator (Fire OS 8's Android base), the app recognised "when is sarah coming" from audio with its on-device model and showed Sarah's answer | [docs/FIRE_TV.md](docs/FIRE_TV.md) |
-| Tests | 93 TypeScript tests (core, server over HTTP, CDK, the real interfaces in Chromium), 5 on the DynamoDB engine, 8 Android unit tests | `pnpm test`, Gradle |
+| Vega OS, on the Vega Virtual Device | Today, answers to questions sent as words, Sarah's recording through MSE, both door cards, a family message, a story from the remote, the night screen; the demo film's TV footage | [docs/VEGA.md](docs/VEGA.md) |
+| Tests | 98 TypeScript tests (core, server over HTTP, CDK, the Vega app's MP4 wrapper, the real interfaces in Chromium), 5 on the DynamoDB engine, 8 Android unit tests, 1 Vega app test (Jest) | `pnpm test`, Gradle, `npx jest` in the Vega build |
 
 The Change Signal figures are from a simulation of the method. They make no clinical claim. [docs/EVAL.md](docs/EVAL.md) has the method, the order of commits, and every number.
 
@@ -84,10 +87,11 @@ apps/tv           the TV interface (React, 10-foot UI), loaded by the Fire TV ap
 apps/family       the family web app (phone first)
 android/app       the Fire TV app (Kotlin): WebView, CameraX presence, Vosk speech, TTS
 android/caremode  a reusable library: open at boot, return to the app when the TV is left idle elsewhere
+vega              the Vega OS app (React Native for Vega): the same screens natively, MSE audio
 infrastructure    AWS CDK stack
-tools             demo, evaluation, benchmark, doctor, media generation
+tools             demo, evaluation, benchmark, doctor, media generation, Vega configure and build
 fixtures          the demo household's photos and recordings, labelled question sets
-docs              architecture, evaluation, safety, Fire TV setup, AWS, Ring, product feedback, friction log
+docs              architecture, evaluation, safety, Fire TV and Vega setup, AWS, Ring, product feedback, friction log
 ```
 
 The demo household (Margaret, Sarah, Tom, Anna), its photographs and its recordings are generated for the demo: `tools/media/`.

@@ -156,13 +156,36 @@ function Screen({ settings }: { settings: NonNullable<ReturnType<typeof resolveS
     [conn, onHeard, closeOverlay],
   );
 
+  // Demo servers can stand in for the camera and microphone (simulators have neither).
+  // Whatever input was waiting when the TV connected is history, not input.
+  const devInput = state?.devInput;
+  const seenDevInput = useRef<string | null>(null);
+  useEffect(() => {
+    if (!state) return;
+    const id = devInput?.id ?? "";
+    if (seenDevInput.current === null) {
+      seenDevInput.current = id;
+      return;
+    }
+    if (!devInput || seenDevInput.current === id) return;
+    seenDevInput.current = id;
+    if (devInput.present !== undefined) emit({ type: "presence", present: devInput.present });
+    if (devInput.heard) emit({ type: "speech", text: devInput.heard, final: true });
+  }, [Boolean(state), devInput?.id]);
+
   // The doorbell: a new card interrupts everything, once.
   const card = state?.doorCard;
   useEffect(() => {
-    if (!card || dismissedDoor.current === card.id) return;
+    // The server's state is the truth: a card it no longer holds (cleared, or state from before a restart) closes.
+    if (!card) {
+      setOverlay((o) => (o?.kind === "door" ? undefined : o));
+      return;
+    }
+    if (dismissedDoor.current === card.id) return;
     const remaining = Date.parse(card.expiresAt) - conn.now();
     if (remaining <= 0) return;
-    setOverlay((o) => (o?.kind === "door" && o.card.id === card.id ? { kind: "door", card } : o?.kind === "door" ? o : { kind: "door", card }));
+    // The same card again (its snapshot arrived), or a newer one: either way it is the one to show.
+    setOverlay({ kind: "door", card });
     window.clearTimeout(overlayTimer.current);
     overlayTimer.current = window.setTimeout(() => {
       dismissedDoor.current = card.id;

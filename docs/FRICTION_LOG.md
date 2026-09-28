@@ -4,9 +4,9 @@ Each entry is something I hit while building Mantel, with the page that was read
 
 ---
 
-## 1. Vega Developer Tools do not run on Windows, so a Windows developer has no Vega simulator
+## 1. Vega Developer Tools are not supported on Windows
 
-**Severity: high** for anyone on Windows.
+**Severity: medium** (high until a working route is found).
 
 **Task.** Start on Vega OS, which the hackathon names first, and show the app in the Vega Virtual Device.
 
@@ -16,9 +16,9 @@ Each entry is something I hit while building Mantel, with the page that was read
 
 **Actual.** The guide lists Mac and Linux only, and says Windows and WSL are not supported. The submission rules ask for the app on "an actual Fire TV device or the Fire TV/Vega simulator", and the only simulator named is Vega's.
 
-**Workaround.** Built for Fire OS instead (Kotlin, a WebView shell around a React interface), tested on the Android TV API 30 emulator, which is the Android base of Fire OS 8, and planned the film on a Fire TV device.
+**Workaround.** I built for Fire OS first. Later I installed the SDK in WSL 2 anyway (Ubuntu 22.04 with systemd, `/dev/kvm` from nested virtualization, `get_vvm.sh` with `NONINTERACTIVE=true`): the CLI, the build and the Vega Virtual Device all ran, the device's window through WSLg, with a warning about nested virtualization. Three things needed finding out: the device stops when the WSL session that started it ends, so it needs a session that stays open; the device reaches a server on Windows at the WSL gateway address; and audio needed the change in entry 10. [VEGA.md](VEGA.md) has the steps.
 
-**Suggestion.** Ship the Vega Virtual Device for WSL 2, or state in the hackathon resources which simulator a Fire OS app on Windows is expected to use.
+**Suggestion.** Support WSL 2, which already nearly works, with a page covering those three points.
 
 ---
 
@@ -107,3 +107,93 @@ Each entry is something I hit while building Mantel, with the page that was read
 **Workaround.** `reasoning_effort: "low"` and `max_tokens: 2500` (`apps/server/src/language.ts`).
 
 **Suggestion.** Return a finish reason that names the reasoning budget, and note in the model card that reasoning counts against `max_tokens`.
+
+---
+
+## 7. The Vega Virtual Device has no WebView
+
+**Severity: medium.**
+
+**Task.** Run Mantel's web TV interface in Vega's WebView on the Vega Virtual Device.
+
+**Steps.** A WebView app from the Vega template (`@amazon-devices/webview`, the page from the package's own assets), `npm run build:debug`, then `vega run-app` on the virtual device.
+
+**Expected.** The app to install and show the page, or the build to say the virtual device cannot run it.
+
+**Actual.** The build succeeded for all three architectures. The install failed: `Module dependency not found`, for `/com.amazon.kepler.webview_4@IWebview_4`, and the CLI suggested a physical device. The virtual device's installed packages include no WebView.
+
+**Workaround.** A native React Native app for Vega (`vega/`) with the same screens, importing the same TypeScript core.
+
+**Suggestion.** Include the WebView in the virtual device image, or say in the WebView documentation that the virtual device cannot run it, and warn at build time.
+
+---
+
+## 8. Vega's media player will not open an http URL, and says only "not supported"
+
+**Severity: medium.**
+
+**Task.** Play a family recording from the household server, which on a home network is plain http.
+
+**Steps.** `AudioPlayer` from `@amazon-devices/react-native-w3cmedia`, `initialize()`, then `src` set to the recording's URL, with the server's host in the manifest's `[network-traffic-policy.cleartext]` allowlist (which the app's own `fetch` honours).
+
+**Expected.** Playback, as for `fetch`; or an error that names cleartext.
+
+**Actual.** `error` with code 4 (`MEDIA_ERR_SRC_NOT_SUPPORTED`) and an empty message for every `http://` source: the LAN server, the same server through a reverse port forward to the device's loopback, and a public http URL. The same file over https played. Through Media Source Extensions, a bare MP3 failed with code 3 (decode) although `MediaSource.isTypeSupported("audio/mpeg")` returned true; MP3 inside an MP4 container played.
+
+**Workaround.** The app fetches each clip itself and wraps the MP3 frames, untouched, in a minimal MP4 for MSE (`vega/src/mp4.ts`, about 150 lines).
+
+**Suggestion.** Apply the cleartext allowlist to the media pipeline, or state "https only" in the `AudioPlayer` documentation and in `MediaError.message`; and have `isTypeSupported` answer for what MSE can decode.
+
+---
+
+## 9. Driving the Vega Virtual Device from a script
+
+**Severity: low.**
+
+**Task.** Press the remote's keys from a script, to film the app.
+
+**Steps.** The emulator console's `event send EV_KEY:KEY_BACK:1` (and keycode 158); key events into the device's window through X11; then `vega device run-cmd -c 'inputd-cli button_press KEY_BACK'`.
+
+**Expected.** One documented way to press a remote key.
+
+**Actual.** Neither console events nor window events reached the app. `inputd-cli`, found by listing the device's `/usr/bin`, did, but through `run-cmd` a key can land seconds after the command returns, and `KEY_ENTER` arrives as `enter`, where the remote's OK is `select`.
+
+**Workaround.** `inputd-cli` for keys, with a wait after each; the app treats `enter` as OK.
+
+**Suggestion.** A `vega device send-key` command, and `inputd-cli` in the documentation.
+
+---
+
+## 10. Audio and logs on the Vega Virtual Device under WSL 2
+
+**Severity: low.**
+
+**Task.** Check that a recording plays, and read the app's log when it does not.
+
+**Steps.** Played audio in the app; watched `currentTime`; read `loggingctl log -v <package>` through `vega device run-cmd`.
+
+**Expected.** Sound through WSLg, or a playback error; the recent log.
+
+**Actual.** While the device ran, WSLg's PulseAudio stopped answering and playback stalled at about half a second with no error, for Amazon's own https sample file as well. The log returned only the last few lines, mostly the renderer's five-second telemetry, so the media errors had gone by the time they were read.
+
+**Workaround.** `QEMU_AUDIO_DRV=none` when starting the device: playback then runs in real time to `ended`, silently. For diagnosis, a temporary on-screen readout of the player's state.
+
+**Suggestion.** A larger log buffer or a filter for the renderer telemetry, and an audio note for WSL.
+
+---
+
+## 11. React Native for Vega draws some styles differently from the web
+
+**Severity: low.**
+
+**Task.** Match the Fire OS app's look in native views: a soft radial light behind the day, and Atkinson Hyperlegible in two weights.
+
+**Steps.** `experimental_backgroundImage` with a radial gradient; a white radial PNG with `tintColor`; stacked translucent circles; fonts in `assets/raw/fonts`, then `assets/fonts`.
+
+**Expected.** What React Native documents.
+
+**Actual.** The gradient was not drawn. The tinted image filled its whole rectangle. Stacked translucent circles came out lavender where the same colour and opacity on the web are steel blue. A font is found by its file name, one weight per family, so the bold weight needed a family name of its own.
+
+**Workaround.** Opaque nested circles, each already blended with the background to the gradient's value at its radius; the bold file renamed to "Atkinson Hyperlegible Bold" (the licence reserves no font name).
+
+**Suggestion.** A page listing the style properties React Native for Vega draws differently or not at all.

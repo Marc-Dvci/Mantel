@@ -32,6 +32,15 @@ The TV bundles this core into its interface, so the Today screen and the answers
 
 `MantelBridge` exposes the native side to the interface as `window.MantelNative`; events come back through `window.__mantelNative(json)`.
 
+## The Vega app
+
+`vega/` is the TV for Vega OS, in React Native for Vega ([VEGA.md](VEGA.md)).
+
+- **Interface.** The Fire OS interface's screens as native views (`screens.tsx`), with the same rules for what shows when (`App.tsx`), importing `packages/core` through Metro.
+- **Presence and questions.** Vega gives apps no camera and no speech recognition: the person is treated as present, and a demo server can send a presence change or the words of a question (`POST /api/dev/tv/input`), which the TV matches and answers as it would a recognised sentence.
+- **Voice.** A family recording, then the household voice from the server. Each clip is fetched by the app and its MP3 frames wrapped in MP4 (`mp4.ts`) for Media Source Extensions, because the media player opens https only.
+- **Remote and offline.** `useTVEventHandler` for OK, Left and Right, `BackHandler` for Back; the last state and the event queue in AsyncStorage.
+
 ## The server
 
 `apps/server` is an Express app that runs locally (`main.ts`) and on AWS Lambda (`lambda.ts`) unchanged.

@@ -127,6 +127,7 @@ export class Mantel {
       ...(door ? { doorCard: door } : {}),
       mediaKey: mediaKey(this.deps.config.secret, hid),
       speech: Boolean(this.deps.voice),
+      ...(this.deps.config.demo && s.devInput ? { devInput: s.devInput } : {}),
     };
   }
 

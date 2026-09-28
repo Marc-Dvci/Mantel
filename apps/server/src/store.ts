@@ -34,6 +34,11 @@ export interface HouseholdState {
   tokens: Record<string, Principal>;
   pairCodes: { code: string; expiresAt: string }[];
   presence: { present: boolean; since?: string; lastSeen?: string };
+  /**
+   * Demo only: a sentence or a presence change for the TV to act on as if its
+   * microphone or camera had produced it. For devices and simulators without them.
+   */
+  devInput?: { id: string; heard?: string; present?: boolean };
   ringDevices: RingDevice[];
 }
 

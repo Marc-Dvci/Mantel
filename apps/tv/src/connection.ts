@@ -17,6 +17,8 @@ export interface TvState {
   doorCard?: DoorCard;
   mediaKey: string;
   speech: boolean;
+  /** Demo servers only: stand-in camera and microphone input. */
+  devInput?: { id: string; heard?: string; present?: boolean };
 }
 
 export interface Settings {

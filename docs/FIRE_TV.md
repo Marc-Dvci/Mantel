@@ -7,6 +7,7 @@
 | Fire TV Cube with a USB (UVC) webcam, 720p30 or better | everything: presence from the webcam, questions through the webcam's microphone |
 | Fire TV Stick (Fire OS 7 or 8) | Today, answers from the remote (OK reads the day), door cards, moments, messages, night screen |
 | Android TV emulator, API 30 (Fire OS 8's Android base) | development; the emulator's virtual camera and a debug receiver stand in for the webcam and microphone |
+| Fire TV with Vega OS, Vega Virtual Device | the separate Vega OS app: [VEGA.md](VEGA.md) |
 
 Amazon's recommended webcams for the Cube's video calling (Logitech C920, C922x, C310) are UVC cameras and work the same way here.
 
