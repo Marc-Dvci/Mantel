@@ -43,6 +43,19 @@ GET <pre-signed URL> → image/jpeg
 
 `apps/server/src/ringsim.ts` serves the documented device list and the documented two-step image download, and delivers signed v1.1 webhooks over HTTP to the server's own `/ring/webhook`, so the demo exercises the production path. `POST /api/dev/ring/press {"visitor": "stranger" | "sarah" | "courier" | "empty"}` chooses who is in the frame.
 
-## Going live
+## A Ring account
 
-Set `RING_ACCESS_TOKEN` (and `RING_API_BASE_URL=https://api.amazonvision.com`), put the signing secret in `RING_WEBHOOK_SECRET`, point the webhook at `/ring/webhook`, and list outside-door contact sensors in `RING_OUTSIDE_DOORS`. The household's `ringDevices` list maps device ids to the doorbell and the doors.
+`RING_LIVE=1` links the household to a Ring account through the Ring API at `https://api.amazonvision.com`.
+
+```bash
+RING_LIVE=1 RING_ACCESS_TOKEN=<token> pnpm dev
+pnpm ring:spike      # the account, its devices and each camera's last seven days, as Mantel reads them
+```
+
+1. **Link.** `GET /v1/devices?include=status,capabilities` returns a JSON:API compound document; `sideload` joins the `included` resources onto their devices. The doorbell is attached to the household by its Ring device id (`RING_DEVICE_ID` picks one when the account has several), next to the household's outside-door contact sensors.
+2. **Read the doorbell's history.** Every `RING_POLL_SECONDS` (default 5), `GET /v1/history/devices/{id}/events?start_time=<ms>` returns the events since the last read. `ding` is a press and becomes the event the webhook path already understands, so it goes through the same door decision, the same alert and the same image download. `motion.human` is recorded as a person at the door.
+3. **Once each.** A history event is keyed `history:<event id>` in the same receipt store as webhook request ids, so a press read twice is acted on once. Events that were already history when the household linked are never replayed onto the TV.
+
+A token from the [Ring Developer Playground](https://developer.amazon.com/ring/console/playground) reads the account directly, with no app registration and no public URL. It lasts about thirty minutes; `RING_ACCESS_TOKEN_FILE=<path>` re-reads the token from a file on every call, so a fresh one can be pasted in without a restart.
+
+With a registered app, Ring also pushes events: put the signing secret in `RING_WEBHOOK_SECRET`, point the webhook at `/ring/webhook`, and list outside-door contact sensors in `RING_OUTSIDE_DOORS`. Webhook deliveries and history reads share one receipt store, so a press that arrives both ways shows one card.

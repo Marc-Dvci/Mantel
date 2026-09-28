@@ -1,8 +1,9 @@
 /**
- * A local Ring: the documented device list, the documented image download
- * (303 to a pre-signed URL), and signed v1.1 webhooks delivered over HTTP to
- * the server's own webhook endpoint. The webhook path the simulator exercises
- * is the production one; only the sender differs.
+ * A local Ring: the documented device list as a JSON:API compound document,
+ * the camera event history, the documented image download (303 to a
+ * pre-signed URL), and signed v1.1 webhooks delivered over HTTP to the
+ * server's own webhook endpoint. The webhook and history paths the simulator
+ * exercises are the production ones; only the sender differs.
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -20,6 +21,8 @@ export class RingSimulator {
   /** Who is standing at the door, for the next snapshot. */
   private visitor: Visitor = "empty";
   private readonly presigned = new Map<string, Visitor>();
+  /** The doorbell's event history, as `GET /v1/history/devices/{id}/events` serves it. */
+  private readonly history: { id: string; type: "events"; attributes: { event_type: string; start: string } }[] = [];
 
   constructor(
     private readonly webhookUrl: string,
@@ -30,13 +33,26 @@ export class RingSimulator {
   router(): Router {
     const r = Router();
     r.get("/v1/devices", (_req, res) => {
+      const rel = (id: string) => ({ capabilities: { data: { type: "device-capabilities", id: `${id}.capabilities` } } });
       res.json({
         meta: { time: new Date().toISOString() },
         data: [
-          { type: "devices", id: SIM_DOORBELL, attributes: { name: "Front Door" } },
-          { type: "devices", id: SIM_FRONT_DOOR, attributes: { name: "Front door" } },
+          { type: "devices", id: SIM_DOORBELL, attributes: { name: "Front Door" }, relationships: rel(SIM_DOORBELL) },
+          { type: "devices", id: SIM_FRONT_DOOR, attributes: { name: "Front door" }, relationships: rel(SIM_FRONT_DOOR) },
+        ],
+        included: [
+          {
+            type: "device-capabilities",
+            id: `${SIM_DOORBELL}.capabilities`,
+            attributes: { video: { codecs: ["AVC"], max_resolution: 1080 }, motion_detection: { configurations: ["enabled"] } },
+          },
+          { type: "device-capabilities", id: `${SIM_FRONT_DOOR}.capabilities`, attributes: { battery_status: { supported: true } } },
         ],
       });
+    });
+    r.get("/v1/history/devices/:id/events", (req, res) => {
+      const since = Number(req.query.start_time ?? 0);
+      res.json({ data: this.history.filter((e) => req.params.id === SIM_DOORBELL && Date.parse(e.attributes.start) >= since) });
     });
     r.post("/v1/devices/:id/media/image/download", (req: Request, res: Response) => {
       if (req.params.id !== SIM_DOORBELL) {
@@ -75,7 +91,18 @@ export class RingSimulator {
 
   async press(visitor: Visitor, atMs: number) {
     this.visitor = visitor;
+    this.remember("ding", atMs);
     return this.deliver(envelope(BUTTON_PRESS, SIM_DOORBELL, atMs));
+  }
+
+  /** A press that reaches only the event history, as on an account with no webhook registered. */
+  pressHistoryOnly(visitor: Visitor, atMs: number) {
+    this.visitor = visitor;
+    this.remember("ding", atMs);
+  }
+
+  private remember(eventType: string, atMs: number) {
+    this.history.push({ id: `evt-${atMs}-${this.history.length}`, type: "events", attributes: { event_type: eventType, start: new Date(atMs).toISOString() } });
   }
 
   async contact(open: boolean, atMs: number) {

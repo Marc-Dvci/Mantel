@@ -9,6 +9,7 @@ import { join } from "node:path";
 import { createApp } from "./app";
 import { buildMantel, FIXTURE_MEDIA, REPO_ROOT } from "./build";
 import { loadConfig } from "./config";
+import { RingLink } from "./ringlive";
 import { RingSimulator } from "./ringsim";
 import { DEMO_HID, seedDemo } from "./seed";
 
@@ -24,6 +25,21 @@ if (config.demo && !(await mantel.deps.store.get(DEMO_HID))) {
 const sim = config.demo ? new RingSimulator(`http://127.0.0.1:${config.port}/ring/webhook`, config.ring.webhookSecret, FIXTURE_MEDIA) : undefined;
 const app = createApp(mantel, { webRoot: join(REPO_ROOT, "dist"), ...(sim ? { sim } : {}) });
 
+if (config.ring.live) {
+  const link = new RingLink(mantel, mantel.deps.ring, log);
+  const hid = process.env.RING_HOUSEHOLD ?? DEMO_HID;
+  const linked = await link.link(hid, config.ring.deviceId);
+  if (linked) {
+    let busy = false;
+    setInterval(async () => {
+      if (busy) return;
+      busy = true;
+      await link.poll().catch((err: Error) => log(`ring: poll failed: ${err.message}`));
+      busy = false;
+    }, config.ring.pollSeconds * 1000).unref();
+  }
+}
+
 setInterval(async () => {
   for (const hid of await mantel.deps.store.households()) {
     const done = await mantel.tick(hid).catch((err: Error) => [`tick failed: ${err.message}`]);
@@ -37,5 +53,6 @@ app.listen(config.port, "0.0.0.0", () => {
     store: config.store,
     drafts: Boolean(mantel.deps.model),
     speech: Boolean(mantel.deps.voice),
+    ring: config.ring.live ? config.ring.apiBase : "simulator",
   });
 });

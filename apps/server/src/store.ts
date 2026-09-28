@@ -19,8 +19,10 @@ export type Principal = { kind: "member"; memberId: string } | { kind: "tv"; dev
 export interface RingDevice {
   id: string;
   name: string;
-  kind: "doorbell" | "contact";
+  kind: "doorbell" | "camera" | "contact";
   outside?: boolean;
+  /** "ring-api" when the device was discovered on a Ring account at link time. */
+  source?: "ring-api";
 }
 
 export interface HouseholdState {

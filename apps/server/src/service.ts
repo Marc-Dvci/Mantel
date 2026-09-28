@@ -37,6 +37,7 @@ import {
   RingPayloadError,
   verifySignature,
   type RingClient,
+  type RingEvent,
 } from "./ring";
 import type { HouseholdState, Principal, Store } from "./store";
 
@@ -179,6 +180,23 @@ export class Mantel {
       return { status: 400, reason: err instanceof RingPayloadError ? err.message : "malformed JSON" };
     }
     if (!(await this.deps.store.recordReceipt(`ring:${event.requestId}`))) return { status: 200, reason: "duplicate" };
+    return this.ringEvent(event);
+  }
+
+  /**
+   * An event read from the account's event history rather than pushed to the
+   * webhook: the same decision, the same idempotency key space, and the frame
+   * fetched straight away since there is no five-second reply to protect.
+   */
+  async ringHistoryEvent(event: RingEvent): Promise<{ status: number; reason: string }> {
+    if (!(await this.deps.store.recordReceipt(`ring:${event.requestId}`))) return { status: 200, reason: "duplicate" };
+    const out = await this.ringEvent(event);
+    await out.after?.();
+    return { status: out.status, reason: out.reason };
+  }
+
+  /** What a Ring event means for the household, whichever way it arrived. */
+  private async ringEvent(event: RingEvent): Promise<{ status: number; reason: string; after?: () => Promise<void> }> {
     const hid = await this.householdForRingDevice(event.deviceId);
     if (!hid) return { status: 200, reason: "device not linked to a household" };
     const at = new Date(event.timestamp);

@@ -23,6 +23,7 @@
     "build:android-assets": "tsx tools/demo/copy-tv-assets.ts",
     "cdk:synth": "tsx infrastructure/cdk/app.ts",
     "check": "tsx tools/demo/doctor.ts",
+    "ring:spike": "tsx tools/ring/spike.ts",
     "verify": "pnpm typecheck && pnpm test && pnpm eval && pnpm bench --dev"
   },
   "devDependencies": {

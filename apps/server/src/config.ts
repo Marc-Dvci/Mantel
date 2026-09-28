@@ -24,6 +24,13 @@ export interface Config {
     apiBase: string;
     webhookSecret: string;
     accessToken?: string;
+    /** A file holding the access token, re-read on every call, so a fresh token needs no restart. */
+    tokenFile?: string;
+    /** Link a Ring account at start and read its doorbell's event history. */
+    live: boolean;
+    /** Which device to link when the account has several. */
+    deviceId?: string;
+    pollSeconds: number;
     /** Device ids of outside-door contact sensors, for night alerts. */
     outsideDoors: string[];
   };
@@ -47,10 +54,15 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     ...(env.MANTEL_BUCKET ? { mediaBucket: env.MANTEL_BUCKET } : {}),
     region: env.AWS_REGION ?? "us-east-1",
     ring: {
-      // Unset means the built-in simulator, served by this same process.
-      apiBase: env.RING_API_BASE_URL ?? `http://localhost:${port}/ring-sim`,
+      // Unset means the built-in simulator, served by this same process;
+      // RING_LIVE=1 means the Ring API.
+      apiBase: env.RING_API_BASE_URL ?? (env.RING_LIVE === "1" ? "https://api.amazonvision.com" : `http://localhost:${port}/ring-sim`),
       webhookSecret: env.RING_WEBHOOK_SECRET ?? "mantel-local-webhook-secret",
       ...(env.RING_ACCESS_TOKEN ? { accessToken: env.RING_ACCESS_TOKEN } : {}),
+      ...(env.RING_ACCESS_TOKEN_FILE ? { tokenFile: resolve(env.RING_ACCESS_TOKEN_FILE) } : {}),
+      live: env.RING_LIVE === "1",
+      ...(env.RING_DEVICE_ID ? { deviceId: env.RING_DEVICE_ID } : {}),
+      pollSeconds: Number(env.RING_POLL_SECONDS ?? 5),
       outsideDoors: (env.RING_OUTSIDE_DOORS ?? "ava1.ring.device.FRONTDOOR").split(",").filter(Boolean),
     },
     ...(env.MANTEL_BEDROCK === "1"

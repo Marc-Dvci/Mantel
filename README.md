@@ -32,7 +32,7 @@ With `pnpm dev` running:
 - ring the simulated doorbell: `curl -X POST localhost:8795/api/dev/ring/press -H "content-type: application/json" -d '{"visitor":"stranger"}'`
 - move the clock: `curl -X POST localhost:8795/api/dev/clock -H "content-type: application/json" -d '{"time":"03:10"}'`
 
-No AWS account, Ring account or API key is needed for any of this. [docs/FIRE_TV.md](docs/FIRE_TV.md) installs the app on a Fire TV with Fire OS; [docs/VEGA.md](docs/VEGA.md) builds the Vega OS app and runs it on the Vega Virtual Device.
+No AWS account, Ring account or API key is needed for any of this. With a Ring account, `RING_LIVE=1 RING_ACCESS_TOKEN=<token> pnpm dev` links the household's doorbell through the Ring API ([docs/RING.md](docs/RING.md)). [docs/FIRE_TV.md](docs/FIRE_TV.md) installs the app on a Fire TV with Fire OS; [docs/VEGA.md](docs/VEGA.md) builds the Vega OS app and runs it on the Vega Virtual Device.
 
 ```bash
 pnpm verify      # typecheck, tests, matcher evaluation, Change Signal benchmark (dev seeds)
@@ -74,7 +74,7 @@ On Vega OS, `vega/` is a React Native app with the same screens and the same cor
 | Change Signal, 40 held-out simulated households, each with a matched null | strong changes caught within 48 h: **70.0%**, at **0.148 false alerts per household-month**; alerting on questions alone: 52.5% at 0.780 | [docs/eval/signal_holdout_read_1.txt](docs/eval/signal_holdout_read_1.txt) |
 | Speech, end to end | in the Android TV API 30 emulator (Fire OS 8's Android base), the app recognised "when is sarah coming" from audio with its on-device model and showed Sarah's answer | [docs/FIRE_TV.md](docs/FIRE_TV.md) |
 | Vega OS, on the Vega Virtual Device | Today, answers to questions sent as words, Sarah's recording through MSE, both door cards, a family message, a story from the remote, the night screen; the demo film's TV footage | [docs/VEGA.md](docs/VEGA.md) |
-| Tests | 99 TypeScript tests (core, server over HTTP, CDK, the Vega app's MP4 wrapper, the real interfaces in Chromium), 5 on the DynamoDB engine, 8 Android unit tests, 1 Vega app test (Jest) | `pnpm test`, Gradle, `npx jest` in the Vega build |
+| Tests | 106 TypeScript tests (core, server over HTTP, the Ring account path, CDK, the Vega app's MP4 wrapper, the real interfaces in Chromium), 5 on the DynamoDB engine, 8 Android unit tests, 1 Vega app test (Jest) | `pnpm test`, Gradle, `npx jest` in the Vega build |
 
 The Change Signal figures are from a simulation of the method. They make no clinical claim. [docs/EVAL.md](docs/EVAL.md) has the method, the order of commits, and every number.
 

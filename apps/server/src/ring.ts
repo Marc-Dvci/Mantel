@@ -96,12 +96,122 @@ export function envelope(type: string, deviceId: string, timestampMs: number, ac
   };
 }
 
+/** A device from `GET /v1/devices`, with what Mantel needs to know about it. */
+export interface RingAccountDevice {
+  id: string;
+  name: string;
+  /** Doorbells ring; other cameras only see motion. Read from the device, never assumed. */
+  kind: "doorbell" | "camera" | "other";
+}
+
+/** One row of `GET /v1/history/devices/{id}/events`. */
+export interface RingHistoryEvent {
+  id: string;
+  /** Ring's history vocabulary: `ding` is a press, `motion.human` a person. */
+  eventType: string;
+  /** Epoch milliseconds. */
+  timestamp: number;
+}
+
+/**
+ * Join a JSON:API compound document's `included` resources onto their devices,
+ * under `attributes.<relationship>`, keyed by (type, id).
+ */
+export function sideload(data: unknown[], included: unknown[] = []): Record<string, unknown>[] {
+  const byKey = new Map<string, Record<string, unknown>>();
+  for (const res of included as { type?: string; id?: string; attributes?: Record<string, unknown> }[]) {
+    if (res && typeof res === "object") byKey.set(`${res.type}|${res.id}`, res.attributes ?? {});
+  }
+  return (data as { id?: string; attributes?: Record<string, unknown>; relationships?: Record<string, { data?: { type?: string; id?: string } }> }[]).map((d) => {
+    const attributes: Record<string, unknown> = { ...(d.attributes ?? {}) };
+    for (const [name, rel] of Object.entries(d.relationships ?? {})) {
+      const found = rel?.data ? byKey.get(`${rel.data.type}|${rel.data.id}`) : undefined;
+      if (found && !(name in attributes)) attributes[name] = found;
+    }
+    return { ...d, attributes };
+  });
+}
+
+/**
+ * Whether a device is a doorbell, from what the device says about itself.
+ * A doorbell is the device that reports presses: its capabilities or its own
+ * description mention a ding, a button or a doorbell.
+ */
+export function deviceKind(device: Record<string, unknown>): RingAccountDevice["kind"] {
+  const text = JSON.stringify(device).toLowerCase();
+  if (/doorbell|"ding"|button_press|\bding\b/.test(text)) return "doorbell";
+  if (/video|camera|motion|image/.test(text)) return "camera";
+  return "other";
+}
+
+/** A history row as the event the webhook path already understands. */
+export function historyToEvent(row: RingHistoryEvent, deviceId: string): RingEvent | undefined {
+  const t = row.eventType.toLowerCase();
+  const base = { requestId: `history:${row.id}`, deviceId, timestamp: row.timestamp };
+  if (t === "ding" || t === BUTTON_PRESS || t.startsWith("ding.")) return { ...base, type: BUTTON_PRESS };
+  if (t.startsWith("motion")) {
+    const sub = t.includes(".") ? t.split(".")[1] : undefined;
+    return { ...base, type: MOTION_DETECTED, ...(sub ? { subType: sub } : {}) };
+  }
+  return undefined;
+}
+
 export class RingClient {
   constructor(
     private readonly apiBase: string,
     private readonly token: () => Promise<string | undefined>,
     private readonly fetchImpl: typeof fetch = fetch,
   ) {}
+
+  private async get(path: string, query: Record<string, string | number> = {}): Promise<unknown> {
+    const token = await this.token();
+    const url = new URL(`${this.apiBase.replace(/\/+$/, "")}${path}`);
+    for (const [k, v] of Object.entries(query)) url.searchParams.set(k, String(v));
+    const res = await this.fetchImpl(url.toString(), {
+      headers: { accept: "application/json", ...(token ? { authorization: `Bearer ${token}` } : {}) },
+    });
+    const text = await res.text();
+    if (!res.ok) throw new Error(`Ring ${path} ${res.status}: ${text.slice(0, 300)}`);
+    return text ? JSON.parse(text) : {};
+  }
+
+  /** The account the token belongs to. */
+  async me(): Promise<Record<string, unknown>> {
+    const body = (await this.get("/v1/users/me")) as { data?: Record<string, unknown> };
+    return body.data ?? (body as Record<string, unknown>);
+  }
+
+  /** Every device the token can see, with status and capabilities joined on. */
+  async devices(): Promise<{ devices: RingAccountDevice[]; raw: unknown }> {
+    const raw = (await this.get("/v1/devices", { include: "status,capabilities" })) as { data?: unknown[]; included?: unknown[] };
+    const joined = sideload(raw.data ?? [], raw.included ?? []);
+    const devices = joined.map((d) => {
+      const attrs = (d.attributes ?? {}) as Record<string, unknown>;
+      const name = String(attrs.name ?? attrs.description ?? attrs.device_name ?? d.id);
+      return { id: String(d.id), name, kind: deviceKind(d) };
+    });
+    return { devices, raw };
+  }
+
+  /** Camera and doorbell events since `startMs`, oldest first. */
+  async history(deviceId: string, startMs: number, eventTypes?: string): Promise<{ events: RingHistoryEvent[]; raw: unknown }> {
+    const raw = (await this.get(`/v1/history/devices/${encodeURIComponent(deviceId)}/events`, {
+      start_time: Math.floor(startMs),
+      ...(eventTypes ? { event_types: eventTypes } : {}),
+    })) as { data?: unknown[] } | unknown[];
+    const rows = (Array.isArray(raw) ? raw : raw.data ?? []) as { id?: string; type?: string; attributes?: Record<string, unknown> }[];
+    const events: RingHistoryEvent[] = [];
+    for (const row of rows) {
+      const a = row.attributes ?? (row as Record<string, unknown>);
+      const eventType = String(a.event_type ?? a.kind ?? row.type ?? "");
+      const stamp = a.start ?? a.start_time ?? a.timestamp ?? a.created_at ?? a.time;
+      const timestamp = epochMs(stamp, NaN);
+      if (!eventType || Number.isNaN(timestamp)) continue;
+      events.push({ id: String(row.id ?? `${deviceId}:${eventType}:${timestamp}`), eventType, timestamp });
+    }
+    events.sort((x, y) => x.timestamp - y.timestamp);
+    return { events, raw };
+  }
 
   /**
    * The frame at `atMs`, as JPEG. Two steps: the POST answers 303 with a
