@@ -98,4 +98,4 @@ The demo household (Margaret, Sarah, Tom, Anna), its photographs and its recordi
 
 ## License
 
-Apache-2.0. Atkinson Hyperlegible is © Braille Institute of America, under the SIL Open Font License. The Vosk model is Apache-2.0.
+Apache-2.0. Atkinson Hyperlegible is © Braille Institute of America, under the SIL Open Font License; in the Vega app the bold weight carries the family name "Atkinson Hyperlegible Bold", because Vega finds fonts by file name. The Vosk model is Apache-2.0.
