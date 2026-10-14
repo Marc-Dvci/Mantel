@@ -180,7 +180,7 @@ export function demoHousehold(now: Date): Household {
   };
 }
 
-const UNKNOWN_SAMPLES = ["is it going to rain", "did the paper come", "where are my glasses", "is my mother coming"];
+const UNKNOWN_SAMPLES = ["is it going to rain", "did the paper come", "why is the light not working", "is my mother coming"];
 
 /**
  * Turn simulated care-day features into the raw events a TV would have sent,

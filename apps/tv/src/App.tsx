@@ -8,6 +8,8 @@ import {
   memberById,
   nextMessage,
   resolveAnswer,
+  dayNameSize,
+  storyBehind,
   type Answer,
   type DoorCard,
   type Household,
@@ -234,7 +236,14 @@ function Screen({ settings }: { settings: NonNullable<ReturnType<typeof resolveS
         return;
       }
       if (overlay) {
-        if (ev.key === "Enter") closeOverlay();
+        if (ev.key !== "Enter") return;
+        // An answer that offers a story ("Shall we look at your photos?"): OK is yes.
+        const offered = overlay.kind === "answer" ? storyBehind(h, overlay.answer) : undefined;
+        if (offered?.story) {
+          showFor({ kind: "story", moment: offered }, 40);
+          conn.send("story.played", { id: offered.id });
+          void say(conn, { text: offered.story.text, audio: offered.story.audio });
+        } else closeOverlay();
         return;
       }
       if (ev.key === "ArrowRight") setMomentIndex((i) => i + 1);
@@ -336,7 +345,7 @@ function TodayScreen({ board, h, moment, photo, highlight }: { board: TodayBoard
         <div className="greeting">
           {greeting}, {h.person.name}
         </div>
-        <div className="dayname">{board.dayName}</div>
+        <div className="dayname" style={{ fontSize: `${dayNameSize(board.dayName)}vw` }}>{board.dayName}</div>
         <div className="part">{board.partOfDay}</div>
         <div className="date">{board.dateLine}</div>
         <div className="clock">{board.clock}</div>

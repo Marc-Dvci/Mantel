@@ -146,3 +146,13 @@ export function computeToday(h: Household, now: Date | number): TodayBoard {
     speech: `It's ${dayName} ${pod === "night" ? "night" : pod}, ${spokenDate(p.date)}.`,
   };
 }
+
+/**
+ * The day name's size on the Today screen, in viewport-width units: as large as
+ * the design allows (12.5) while the name still fits its column on one line.
+ * "Monday" keeps the full size; "Wednesday" shrinks instead of wrapping.
+ */
+export function dayNameSize(name: string, columnVw = 46, maxVw = 12.5): number {
+  // Atkinson Hyperlegible Bold averages about 0.6 em per letter in a day name.
+  return Math.min(maxVw, columnVw / (Math.max(1, name.length) * 0.6));
+}

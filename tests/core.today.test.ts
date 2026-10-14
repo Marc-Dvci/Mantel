@@ -1,4 +1,4 @@
-import { computeToday, nextMessage, screenMode, parseClock } from "../packages/core/src";
+import { computeToday, dayNameSize, nextMessage, screenMode, parseClock } from "../packages/core/src";
 import { at, household } from "./helpers";
 
 describe("Today screen", () => {
@@ -65,5 +65,13 @@ describe("messages", () => {
     const { h } = household("07:42");
     delete h.messages[0]!.approvedBy;
     expect(nextMessage(h, at("07:42"), true)).toBeUndefined();
+  });
+});
+
+describe("dayNameSize", () => {
+  it("keeps short day names at full size and shrinks long ones to fit the column", () => {
+    expect(dayNameSize("Monday")).toBe(12.5);
+    expect(dayNameSize("Wednesday")).toBeLessThan(9);
+    expect(dayNameSize("Wednesday") * "Wednesday".length * 0.6).toBeLessThanOrEqual(46.0001);
   });
 });

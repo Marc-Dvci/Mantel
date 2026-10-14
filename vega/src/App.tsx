@@ -6,8 +6,9 @@
  * matches questions and resolves the family's answers on the TV itself; the
  * household server supplies the plan, the door cards and the recordings.
  *
- * The remote: OK reads the day aloud, or plays a photo's story; Left and Right
- * browse photos; Back closes whatever is on screen.
+ * The remote: OK reads the day aloud, or plays a photo's story (also from an
+ * answer that offers one); Left and Right browse photos; Back closes whatever
+ * is on screen.
  *
  * Vega gives apps no camera and no speech recognition, so on Vega the person
  * is treated as present. A demo server can stand in for both (a heard sentence,
@@ -19,7 +20,7 @@ import * as React from 'react';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {useHideSplashScreenCallback, usePreventHideSplashScreen, useTVEventHandler, type HWEvent} from '@amazon-devices/react-native-kepler';
-import {Matcher, UNKNOWN_RESPONSE, addressed, computeToday, isQuestion, nextMessage, resolveAnswer, type Answer, type DoorCard, type Household, type Message, type Moment} from './core';
+import {Matcher, UNKNOWN_RESPONSE, addressed, computeToday, isQuestion, nextMessage, resolveAnswer, storyBehind, type Answer, type DoorCard, type Household, type Message, type Moment} from './core';
 import {SERVER, TOKEN} from './config';
 import {Connection, type TvState} from './connection';
 import {AnswerScreen, Backdrop, DoorScreen, Fade, Loading, MessageScreen, NightScreen, RestScreen, Status, StoryScreen, THEME, TodayScreen, mix, type Mode} from './screens';
@@ -211,17 +212,24 @@ function Screen() {
     if (e.eventKeyAction !== KEY_DOWN || !h || !board) return;
     // The remote's OK arrives as 'select'; a keyboard's Enter as 'enter'.
     const ok = e.eventType === 'select' || e.eventType === 'enter';
+    const playStory = (m: Moment & {story: NonNullable<Moment['story']>}) => {
+      showFor({kind: 'story', moment: m}, 40);
+      conn.send('story.played', {id: m.id});
+      void say(conn, {text: m.story.text, audio: m.story.audio});
+    };
     if (overlay) {
-      if (ok) closeOverlay();
+      if (!ok) return;
+      // An answer that offers a story ("Shall we look at your photos?"): OK is yes.
+      const offered = overlay.kind === 'answer' ? storyBehind(h, overlay.answer) : undefined;
+      if (offered?.story) playStory({...offered, story: offered.story});
+      else closeOverlay();
       return;
     }
     if (e.eventType === 'right') setMomentIndex(i => i + 1);
     else if (e.eventType === 'left') setMomentIndex(i => i - 1 + Math.max(1, moments.length));
     else if (ok) {
       if (moment?.story && !board.next?.soon) {
-        showFor({kind: 'story', moment}, 40);
-        conn.send('story.played', {id: moment.id});
-        void say(conn, {text: moment.story.text, audio: moment.story.audio});
+        playStory({...moment, story: moment.story});
       } else {
         void say(conn, {text: `${board.speech}${board.next ? ` ${board.next.speech}.` : ''}`});
       }

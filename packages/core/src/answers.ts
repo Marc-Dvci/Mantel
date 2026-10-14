@@ -18,7 +18,7 @@
  * a family member, or are computed from the plan and the clock.
  */
 
-import type { Household, Member, PlanItem, Topic } from "./model";
+import type { Household, Member, Moment, PlanItem, Topic } from "./model";
 import { memberById } from "./model";
 import { itemsOn } from "./today";
 import { normalize, sameName, tokens } from "./text";
@@ -488,3 +488,12 @@ export const UNKNOWN_RESPONSE = {
   text: "Let's look at today together.",
   speech: "Let's look at today together.",
 };
+
+/**
+ * The family story behind an answer's photo. An answer that offers one ("Shall
+ * we look at your photos from Lake Tahoe?") opens it on the remote's OK.
+ */
+export function storyBehind(h: Household, answer: Pick<Answer, "photo">): Moment | undefined {
+  if (!answer.photo) return undefined;
+  return h.moments.find((m) => m.photo === answer.photo && m.story);
+}

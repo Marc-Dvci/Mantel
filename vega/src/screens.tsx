@@ -9,11 +9,17 @@
 import * as React from 'react';
 import {useEffect, useRef} from 'react';
 import {Animated, Dimensions, Image, StyleSheet, Text, View, type TextStyle} from 'react-native';
-import {memberById, type Answer, type DoorCard, type Household, type Message, type Moment, type TodayBoard} from './core';
+import {dayNameSize, memberById, type Answer, type DoorCard, type Household, type Message, type Moment, type TodayBoard} from './core';
 
 const {width, height} = Dimensions.get('window');
 /** 1% of the screen's width and height, the units the web interface is written in. */
 const vw = width / 100;
+
+/** The day name as large as its column allows on one line ("Wednesday" shrinks, "Monday" does not). */
+const daySize = (name: string): TextStyle => {
+  const f = dayNameSize(name) * vw;
+  return {fontSize: f, lineHeight: f * 1.02};
+};
 const vh = height / 100;
 
 export const INK = '#f7f1e6';
@@ -128,7 +134,7 @@ export function TodayScreen({board, h, moment, photo, highlight, accent}: {board
           <T style={s.greeting}>
             {greeting}, {h.person.name}
           </T>
-          <T style={s.dayname}>{board.dayName}</T>
+          <T style={[s.dayname, daySize(board.dayName)]} numberOfLines={1}>{board.dayName}</T>
           <T style={[s.part, {color: accent}]}>{board.partOfDay}</T>
           <T style={s.date}>{board.dateLine}</T>
           <Text style={s.clock}>{board.clock}</Text>

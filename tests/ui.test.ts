@@ -120,23 +120,23 @@ describe.skipIf(!ready)("interfaces in a browser", () => {
     if (!browser) return;
     const sarah = await browser.newPage({ viewport: { width: 412, height: 915 } });
     await sarah.goto(`${base}/family/?token=demo-sarah#home`);
-    const row = sarah.locator(".row", { hasText: "where are my glasses" });
+    const row = sarah.locator(".row", { hasText: "why is the light not working" });
     await row.getByRole("button", { name: "Add an answer" }).click();
     await sarah.getByText("A new answer").waitFor();
-    expect(await sarah.getByPlaceholder("where is robert").first().inputValue()).toBe("where are my glasses");
-    await sarah.getByPlaceholder("Robert", { exact: true }).fill("Glasses");
-    await sarah.locator("textarea").first().fill("Your glasses are on the table by your chair.");
+    expect(await sarah.getByPlaceholder("where is robert").first().inputValue()).toBe("why is the light not working");
+    await sarah.getByPlaceholder("Robert", { exact: true }).fill("The light");
+    await sarah.locator("textarea").first().fill("Sarah will come tonight to fix it.");
     await sarah.getByRole("button", { name: "Save" }).click();
-    await sarah.getByText("Your glasses are on the table by your chair.").waitFor();
+    await sarah.getByText("Sarah will come tonight to fix it.").waitFor();
 
     // Ten minutes later: the doorbell card from the first test has expired.
     await post("/api/dev/clock", { time: "14:20", date: "2026-09-29" });
     const tv = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
     await tv.goto(`${base}/tv/?token=demo-tv&dev=1`);
     await tv.getByText("Good afternoon, Margaret").waitFor();
-    await tv.fill(".dev input", "Where are my glasses?");
+    await tv.fill(".dev input", "Why is the light not working?");
     await tv.press(".dev input", "Enter");
-    await tv.getByText("Your glasses are on the table by your chair.").waitFor();
+    await tv.getByText("Sarah will come tonight to fix it.").waitFor();
     await sarah.close();
     await tv.close();
   }, 60_000);

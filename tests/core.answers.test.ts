@@ -1,4 +1,4 @@
-import { Matcher, UNKNOWN_RESPONSE, addressed, isQuestion, resolveAnswer } from "../packages/core/src";
+import { Matcher, UNKNOWN_RESPONSE, addressed, demoHousehold, isQuestion, resolveAnswer, storyBehind } from "../packages/core/src";
 import { at, household } from "./helpers";
 
 function ask(text: string, hhmm = "14:05") {
@@ -140,5 +140,14 @@ describe("answers", () => {
 
   it("has a neutral reply for everything else", () => {
     expect(UNKNOWN_RESPONSE.text).toBe("Let's look at today together.");
+  });
+});
+
+describe("storyBehind", () => {
+  it("finds the story an answer's photo offers, and nothing for an answer without one", () => {
+    const h = demoHousehold(new Date("2026-09-29T14:00:00Z"));
+    expect(storyBehind(h, { photo: "moment-tahoe-1968" })?.id).toBe("m-tahoe");
+    expect(storyBehind(h, { photo: "photo-sarah" })).toBeUndefined();
+    expect(storyBehind(h, {})).toBeUndefined();
   });
 });
