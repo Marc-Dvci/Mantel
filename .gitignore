@@ -7,6 +7,7 @@ dist/
 !.env.example
 .DS_Store
 infrastructure/cdk/cdk.out/
+cdk.out/
 android/.gradle/
 android/**/build/
 android/local.properties

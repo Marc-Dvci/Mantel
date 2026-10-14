@@ -22,17 +22,21 @@ export const DEMO_TOKENS = {
 export async function seedDemo(mantel: Mantel): Promise<void> {
   const { store } = mantel.deps;
   const now = mantel.clock.now();
+  // Keep the version rising across a reseed, so long-polling screens wake.
+  const previous = await store.get(DEMO_HID);
   const household = demoHousehold(now);
   const { events } = demoHistory(household, now);
   const state: HouseholdState = {
     household,
-    version: 1,
+    version: (previous?.version ?? 0) + 1,
     alerts: [],
     digests: {},
     evaluated: [],
     tokens: { ...DEMO_TOKENS },
     pairCodes: [],
     presence: { present: false },
+    clockOffsetMs: mantel.clock.offset,
+    seededAt: new Date().toISOString(),
     ringDevices: [
       { id: SIM_DOORBELL, name: "Front Door", kind: "doorbell" },
       { id: SIM_FRONT_DOOR, name: "Front door", kind: "contact", outside: true },

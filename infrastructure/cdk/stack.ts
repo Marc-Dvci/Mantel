@@ -40,6 +40,12 @@ export interface MantelStackProps extends StackProps {
   deployWeb?: boolean;
   /** Seed the demo household and serve the dev endpoints. */
   demo?: boolean;
+  /**
+   * Serve the web apps through CloudFront from S3 (default). Off: the API
+   * Lambda serves them from its bundle, and the API's own address is the URL,
+   * for accounts where CloudFront is not yet available.
+   */
+  cdn?: boolean;
 }
 
 export class MantelStack extends Stack {
@@ -62,13 +68,7 @@ export class MantelStack extends Stack {
       removalPolicy: RemovalPolicy.RETAIN,
     });
 
-    const web = new Bucket(this, "Web", {
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      encryption: BucketEncryption.S3_MANAGED,
-      enforceSSL: true,
-      removalPolicy: RemovalPolicy.DESTROY,
-      autoDeleteObjects: true,
-    });
+    const cdn = props.cdn ?? true;
 
     const ringSecret = new Secret(this, "RingWebhookSecret", {
       description: "HMAC key Ring signs webhooks with (paste the value from the Ring developer portal)",
@@ -90,6 +90,7 @@ export class MantelStack extends Stack {
       MANTEL_DATA_DIR: "/tmp/mantel",
       MANTEL_FIXTURES: "/var/task/fixtures/media",
       NODE_OPTIONS: "--enable-source-maps",
+      ...(cdn ? {} : { MANTEL_WEB_ROOT: "/var/task/web" }),
       ...(props.modelId ? { MANTEL_BEDROCK: "1", MANTEL_MODEL_ID: props.modelId } : {}),
       ...(props.bedrockEndpoint ? { MANTEL_BEDROCK_ENDPOINT: props.bedrockEndpoint } : {}),
       ...(props.pollyVoice ? { MANTEL_POLLY: "1", MANTEL_POLLY_VOICE: props.pollyVoice } : {}),
@@ -112,7 +113,10 @@ export class MantelStack extends Stack {
         commandHooks: {
           beforeBundling: () => [],
           beforeInstall: () => [],
-          afterBundling: (inputDir: string, outputDir: string) => [`node -e "require('fs').cpSync(process.argv[1], process.argv[2], { recursive: true })" "${inputDir}/fixtures/media" "${outputDir}/fixtures/media"`],
+          afterBundling: (inputDir: string, outputDir: string) => [
+            `node -e "require('fs').cpSync(process.argv[1], process.argv[2], { recursive: true })" "${inputDir}/fixtures/media" "${outputDir}/fixtures/media"`,
+            ...(cdn ? [] : [`node -e "require('fs').cpSync(process.argv[1], process.argv[2], { recursive: true })" "${inputDir}/dist" "${outputDir}/web"`]),
+          ],
         },
       },
       depsLockFilePath: join(props.repoRoot, "pnpm-lock.yaml"),
@@ -141,7 +145,8 @@ export class MantelStack extends Stack {
       if (props.modelId) {
         fn.addToRolePolicy(
           new PolicyStatement({
-            actions: ["bedrock:InvokeModel", "bedrock:Converse", "bedrock:CallWithBearerToken"],
+            // The Bedrock API endpoint (bedrock-mantle) authorises under its own service prefix.
+            actions: ["bedrock:InvokeModel", "bedrock:Converse", "bedrock:CallWithBearerToken", "bedrock-mantle:*"],
             resources: ["*"],
           }),
         );
@@ -164,36 +169,47 @@ export class MantelStack extends Stack {
       if (props.demo) fn.addEnvironment("RING_API_BASE_URL", `${http.apiEndpoint}/ring-sim`);
     }
 
-    const apiOrigin = new origins.HttpOrigin(`${http.apiId}.execute-api.${this.region}.amazonaws.com`, {
-      readTimeout: Duration.seconds(30),
-    });
-    const passThrough: cloudfront.BehaviorOptions = {
-      origin: apiOrigin,
-      allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
-      cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
-      originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
-      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-    };
-    const site = new cloudfront.Distribution(this, "Site", {
-      defaultBehavior: {
-        origin: origins.S3BucketOrigin.withOriginAccessControl(web),
-        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      },
-      additionalBehaviors: { "/api/*": passThrough, "/media/*": passThrough, "/ring/*": passThrough, "/ring-sim/*": passThrough },
-      defaultRootObject: "family/index.html",
-    });
-
-    if (props.deployWeb) {
-      new BucketDeployment(this, "WebApps", {
-        sources: [Source.asset(join(props.repoRoot, "dist"))],
-        destinationBucket: web,
-        distribution: site,
-        distributionPaths: ["/*"],
+    let url = http.apiEndpoint;
+    if (cdn) {
+      const web = new Bucket(this, "Web", {
+        blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+        encryption: BucketEncryption.S3_MANAGED,
+        enforceSSL: true,
+        removalPolicy: RemovalPolicy.DESTROY,
+        autoDeleteObjects: true,
       });
+      const apiOrigin = new origins.HttpOrigin(`${http.apiId}.execute-api.${this.region}.amazonaws.com`, {
+        readTimeout: Duration.seconds(30),
+      });
+      const passThrough: cloudfront.BehaviorOptions = {
+        origin: apiOrigin,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+        originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      };
+      const site = new cloudfront.Distribution(this, "Site", {
+        defaultBehavior: {
+          origin: origins.S3BucketOrigin.withOriginAccessControl(web),
+          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        },
+        additionalBehaviors: { "/api/*": passThrough, "/media/*": passThrough, "/ring/*": passThrough, "/ring-sim/*": passThrough },
+        defaultRootObject: "family/index.html",
+      });
+
+      if (props.deployWeb) {
+        new BucketDeployment(this, "WebApps", {
+          sources: [Source.asset(join(props.repoRoot, "dist"))],
+          destinationBucket: web,
+          distribution: site,
+          distributionPaths: ["/*"],
+        });
+      }
+      url = `https://${site.distributionDomainName}`;
     }
 
-    new CfnOutput(this, "Url", { value: `https://${site.distributionDomainName}` });
-    new CfnOutput(this, "RingWebhookUrl", { value: `https://${site.distributionDomainName}/ring/webhook` });
+    new CfnOutput(this, "Url", { value: url });
+    new CfnOutput(this, "RingWebhookUrl", { value: `${url}/ring/webhook` });
     new CfnOutput(this, "TableName", { value: table.tableName });
     new CfnOutput(this, "RingSecretArn", { value: ringSecret.secretArn });
   }

@@ -5,7 +5,7 @@
  *   npx cdk deploy --app "npx tsx infrastructure/cdk/app.ts"
  *
  * Context (or environment): MANTEL_MODEL_ID, MANTEL_BEDROCK_ENDPOINT,
- * MANTEL_POLLY_VOICE, MANTEL_DEMO=1.
+ * MANTEL_POLLY_VOICE, MANTEL_DEMO=1, MANTEL_CDN=0 (no CloudFront: the API serves the web apps).
  */
 
 import { dirname, join, resolve } from "node:path";
@@ -24,6 +24,7 @@ new MantelStack(app, "Mantel", {
   pollyVoice: process.env.MANTEL_POLLY_VOICE ?? "Joanna",
   deployWeb: true,
   demo: process.env.MANTEL_DEMO === "1",
+  cdn: process.env.MANTEL_CDN !== "0",
   env: { region: process.env.AWS_REGION ?? "us-east-1", ...(process.env.CDK_DEFAULT_ACCOUNT ? { account: process.env.CDK_DEFAULT_ACCOUNT } : {}) },
   description: "Mantel: a Fire TV app that answers a person living with dementia in their family's words",
 });

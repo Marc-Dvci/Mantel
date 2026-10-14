@@ -10,7 +10,7 @@
 | **Amazon API Gateway** (HTTP API) | the API's front door; 30-second limit covers the TV's 20-second long-poll | `infrastructure/cdk/stack.ts` |
 | **Amazon DynamoDB** | one table: household documents (version-checked writes), events, tokens, Ring receipts with a TTL | `apps/server/src/dynamo.ts` |
 | **Amazon S3** | photos, recordings, doorbell snapshots (private); the built web apps | `apps/server/src/media.ts` |
-| **Amazon CloudFront** | one address for the web apps and the API | `stack.ts` |
+| **Amazon CloudFront** | one address for the web apps and the API (optional: `MANTEL_CDN=0` serves the apps from the API) | `stack.ts` |
 | **Amazon EventBridge** | the tick every five minutes: door-card expiry, the Change Signal, the digest | `stack.ts` |
 | **AWS Secrets Manager** | the Ring webhook signing secret and the media-link secret, read at cold start | `lambda.ts` |
 | **AWS CDK** | the whole stack as code, with assertion tests | `infrastructure/cdk`, `tests/cdk.test.ts` |
@@ -36,6 +36,8 @@ Polly     polly-neural-Joanna: 13580 bytes of MP3 in 410 ms
 
 The DynamoDB store was run against DynamoDB's own engine (DynamoDB Local): `tests/dynamo.test.ts`, 5 tests, including two concurrent writers that both land through the version check and a long-poll woken by a version change. The Lambda bundle that `cdk synth` produces was loaded and invoked with API Gateway v2 events against that engine: it seeded the demo household (40 days of events through `BatchWriteItem`), served the TV state and the family overview, refused a media link with the wrong key, and ran the tick.
 
+The stack is deployed in `us-east-1` and serves the live demo at <https://wcnre0e2hh.execute-api.us-east-1.amazonaws.com/family/>. Checked against it: the TV interface in Chromium answered "Where is Robert?" with Sarah's redirect, a simulated doorbell press put the door card and its snapshot on the TV, and the family app signed in as Sarah; photos, recordings and fonts came back byte for byte through Lambda; a Polly line was synthesised and cached in S3; six parallel requests on separate instances read the same moved dev clock.
+
 ## Deploy
 
 ```bash
@@ -44,7 +46,16 @@ MANTEL_DEMO=1 npx cdk deploy --app "npx tsx infrastructure/cdk/app.ts"
 # then paste the Ring webhook signing secret into the RingWebhookSecret secret, and the RingWebhookUrl output into the Ring developer portal
 ```
 
-Configuration comes from the environment: `MANTEL_MODEL_ID`, `MANTEL_BEDROCK_ENDPOINT`, `MANTEL_POLLY_VOICE`, `MANTEL_DEMO`.
+Configuration comes from the environment: `MANTEL_MODEL_ID`, `MANTEL_BEDROCK_ENDPOINT`, `MANTEL_POLLY_VOICE`, `MANTEL_DEMO`, `MANTEL_CDN`.
+
+With `MANTEL_CDN=0` the stack has no CloudFront distribution and no web bucket: the API function carries the built web apps in its bundle and serves them, and the API Gateway address is the URL. The live demo runs this way:
+
+```bash
+pnpm build:web
+MANTEL_DEMO=1 MANTEL_CDN=0 npx cdk deploy --app "npx tsx infrastructure/cdk/app.ts"
+```
+
+With the demo on, every server instance reads the dev clock from the household record (Lambda instances share no memory), and the tick reseeds the demo household at the start of each day in its time zone.
 
 ## Environment variables (server)
 

@@ -549,8 +549,11 @@ export function createApp(mantel: Mantel, opts: AppOptions = {}) {
           const date = body.date ?? addDays(localParts(mantel.clock.now(), h.settings.timezone).date, body.days ?? 0);
           mantel.clock.setTo(zonedInstant(date, body.time, h.settings.timezone));
         }
-        // Bump the version so every screen re-reads the time now.
-        await store.update(hid, () => undefined);
+        // Bump the version so every screen re-reads the time now. The offset is
+        // stored so that every server instance (several, on Lambda) reads it.
+        await store.update(hid, (s) => {
+          s.clockOffsetMs = mantel.clock.offset;
+        });
         await mantel.tick(hid);
         return { now: mantel.clock.now().toISOString() };
       }),

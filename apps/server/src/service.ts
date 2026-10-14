@@ -53,6 +53,9 @@ export class Clock {
   reset() {
     this.offsetMs = 0;
   }
+  setOffset(ms: number) {
+    this.offsetMs = ms;
+  }
   get offset() {
     return this.offsetMs;
   }

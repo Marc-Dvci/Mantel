@@ -197,3 +197,21 @@ Each entry is something I hit while building Mantel, with the page that was read
 **Workaround.** Opaque nested circles, each already blended with the background to the gradient's value at its radius; the bold file renamed to "Atkinson Hyperlegible Bold" (the licence reserves no font name).
 
 **Suggestion.** A page listing the style properties React Native for Vega draws differently or not at all.
+
+---
+
+## 12. CloudFront refuses a new account's first distribution, at the end of a deploy
+
+**Severity: medium.**
+
+**Task.** Deploy the Mantel stack (`infrastructure/cdk`) to a working AWS account that already runs Lambda, API Gateway, DynamoDB and S3, with Amazon CloudFront in front of the web apps and the API.
+
+**Steps.** `cdk bootstrap`, then `MANTEL_DEMO=1 npx cdk deploy`.
+
+**Expected.** The distribution created with the rest of the stack, or a check before the deploy started saying the account cannot create one.
+
+**Actual.** The table, the buckets, both functions and the API were created; then `AWS::CloudFront::Distribution` failed with "Your account must be verified before you can add new CloudFront resources. To verify your account, please contact AWS Support", and the whole stack rolled back. The table and the media bucket, kept by their retain policy, stayed behind and had to be deleted by hand. No earlier step warned: `cdk bootstrap` and the change set both succeeded.
+
+**Workaround.** A `cdn` switch on the stack (`MANTEL_CDN=0`): the API function serves the two web apps from its own bundle and the API Gateway address is the public URL. The demo runs there.
+
+**Suggestion.** Expose the verification state through the API (a Service Quotas value or an account attribute), so `cdk deploy` and CloudFormation can fail before creating anything, and let an account owner request verification from the console without a support case.

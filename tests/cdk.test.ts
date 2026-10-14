@@ -58,3 +58,23 @@ describe("CDK stack", () => {
     expect(dist.Properties.DistributionConfig.CacheBehaviors.map((b) => b.PathPattern).sort()).toEqual(["/api/*", "/media/*", "/ring-sim/*", "/ring/*"]);
   });
 });
+
+describe("CDK stack without CloudFront", () => {
+  const app = new App({ outdir: mkdtempSync(join(tmpdir(), "mantel-cdk-")) });
+  const stack = new MantelStack(app, "TestNoCdn", {
+    repoRoot: resolve(__dirname, ".."),
+    demo: true,
+    cdn: false,
+    env: { region: "us-east-1", account: "123456789012" },
+  });
+  const t = Template.fromStack(stack);
+
+  it("has no distribution and no web bucket, and the API serves the web apps from its bundle", () => {
+    t.resourceCountIs("AWS::CloudFront::Distribution", 0);
+    t.resourceCountIs("AWS::S3::Bucket", 1);
+    t.hasResourceProperties("AWS::Lambda::Function", {
+      Handler: "index.api",
+      Environment: { Variables: Match.objectLike({ MANTEL_WEB_ROOT: "/var/task/web" }) },
+    });
+  });
+});

@@ -223,3 +223,20 @@ describe("family API", () => {
     expect((await call("/api/family/privacy/erase", { method: "POST", token: "demo-tom" })).status).toBe(403);
   });
 });
+
+describe("demo clock", () => {
+  it("stores the moved clock so every server instance reads it, and a reseed keeps the version rising", async () => {
+    const before = (await mantel.deps.store.get(DEMO_HID))!.version;
+    const moved = await call("/api/dev/clock", { method: "POST", json: { time: "15:00", date: "2026-09-29" } });
+    expect(moved.status).toBe(200);
+    const stored = (await mantel.deps.store.get(DEMO_HID))!;
+    expect(stored.clockOffsetMs).toBe(mantel.clock.offset);
+    const other = new Clock();
+    other.setOffset(stored.clockOffsetMs!);
+    expect(Math.abs(other.now().getTime() - mantel.clock.now().getTime())).toBeLessThan(1000);
+    await seedDemo(mantel);
+    const reseeded = (await mantel.deps.store.get(DEMO_HID))!;
+    expect(reseeded.version).toBeGreaterThan(before);
+    expect(reseeded.seededAt).toBeDefined();
+  });
+});

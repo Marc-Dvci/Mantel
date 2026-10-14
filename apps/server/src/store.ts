@@ -41,6 +41,10 @@ export interface HouseholdState {
    * microphone or camera had produced it. For devices and simulators without them.
    */
   devInput?: { id: string; heard?: string; present?: boolean };
+  /** Demo only: where the dev clock was moved, so every server instance reads the same time. */
+  clockOffsetMs?: number;
+  /** Demo only: the real instant the demo household was seeded. */
+  seededAt?: string;
   ringDevices: RingDevice[];
 }
 

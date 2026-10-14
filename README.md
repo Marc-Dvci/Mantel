@@ -2,7 +2,9 @@
 
 **Mantel is a Fire TV app that turns the living-room TV into a patient memory for a person living with dementia. It answers the questions they ask all day in their family's own words, knows who is at the door, and tells the family when something changes.** It runs on Fire OS (a Kotlin app with on-device presence and speech) and on Vega OS (a React Native app).
 
-![The Today screen on Fire TV](docs/img/tv-today.png)
+![Four Mantel screens on the Vega Virtual Device](docs/img/writeup/mantel-1-screens.png)
+
+**Try it live:** the TV in a browser at <https://wcnre0e2hh.execute-api.us-east-1.amazonaws.com/tv/?token=demo-tv&dev=1> (the `dev` panel stands in for the camera and microphone), and Sarah's phone at <https://wcnre0e2hh.execute-api.us-east-1.amazonaws.com/family/>. The demo household resets each day.
 
 A person living with dementia asks the same questions many times a day: what day it is, when their daughter is coming, where their husband is. Families answer them with whiteboards and day clocks, and by answering again. Mantel puts the family's answers on the screen that person already faces.
 
@@ -12,6 +14,8 @@ A person living with dementia asks the same questions many times a day: what day
 - **Moments.** Family photos with captions, and stories told in family voices, rotate slowly while the person is in the room.
 - **Evening and night.** A calmer evening, and a dim night screen ("It's night-time. Everyone is asleep. Your bed is ready."). An outside door opening at night alerts the family.
 - **The Change Signal.** Confusion that worsens over a day or two can be delirium, often from a treatable infection. Mantel compares the day's questions, night-time activity, night door openings and waking time with the person's own last four weeks, and tells the family about a sudden change: "Consider calling Margaret's doctor." It never diagnoses.
+
+![The answer loop](docs/img/writeup/mantel-2-loop.png)
 
 Every word the TV says was written or approved by the family, or computed from their plan and the clock. For the hardest questions ("Where is Robert?" about a husband who has died) the family chooses, topic by topic, whether the TV tells, redirects or comforts, starting from published caregiving guidance. Mantel never makes that choice.
 
@@ -74,7 +78,7 @@ On Vega OS, `vega/` is a React Native app with the same screens and the same cor
 | Change Signal, 40 held-out simulated households, each with a matched null | strong changes caught within 48 h: **70.0%**, at **0.148 false alerts per household-month**; alerting on questions alone: 52.5% at 0.780 | [docs/eval/signal_holdout_read_1.txt](docs/eval/signal_holdout_read_1.txt) |
 | Speech, end to end | in the Android TV API 30 emulator (Fire OS 8's Android base), the app recognised "when is sarah coming" from audio with its on-device model and showed Sarah's answer | [docs/FIRE_TV.md](docs/FIRE_TV.md) |
 | Vega OS, on the Vega Virtual Device | Today, answers to questions sent as words, Sarah's recording through MSE, both door cards, a family message, a story from the remote, the night screen; the demo film's TV footage | [docs/VEGA.md](docs/VEGA.md) |
-| Tests | 106 TypeScript tests (core, server over HTTP, the Ring account path, CDK, the Vega app's MP4 wrapper, the real interfaces in Chromium), 5 on the DynamoDB engine, 8 Android unit tests, 1 Vega app test (Jest) | `pnpm test`, Gradle, `npx jest` in the Vega build |
+| Tests | 108 TypeScript tests (core, server over HTTP, the Ring account path, CDK, the Vega app's MP4 wrapper, the real interfaces in Chromium), 5 on the DynamoDB engine, 8 Android unit tests, 1 Vega app test (Jest) | `pnpm test`, Gradle, `npx jest` in the Vega build |
 
 The Change Signal figures are from a simulation of the method. They make no clinical claim. [docs/EVAL.md](docs/EVAL.md) has the method, the order of commits, and every number.
 
