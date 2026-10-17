@@ -6,6 +6,8 @@
 
 **Try it live:** the TV in a browser at <https://wcnre0e2hh.execute-api.us-east-1.amazonaws.com/tv/?token=demo-tv&dev=1> (the `dev` panel stands in for the camera and microphone), and Sarah's phone at <https://wcnre0e2hh.execute-api.us-east-1.amazonaws.com/family/>. The demo household resets each day.
 
+**Demo video:** <https://youtu.be/DVv6DFgwLCk>
+
 A person living with dementia asks the same questions many times a day: what day it is, when their daughter is coming, where their husband is. Families answer them with whiteboards and day clocks, and by answering again. Mantel puts the family's answers on the screen that person already faces.
 
 - **Today.** When the TV's camera sees someone in the room, the screen shows the day, the part of the day, the date and what happens next ("Sarah is coming at 4 o'clock", with Sarah's photo). It answers the common questions before they are asked.
